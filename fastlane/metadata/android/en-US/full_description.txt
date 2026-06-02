@@ -1,0 +1,16 @@
+TravelMate Beta is a smart mobility planner for Hyderabad, India. Plan multi-modal routes using Metro, MMTS suburban rail, TSRTC buses, and community ride-pooling — all in one app.
+
+Features:
+• Multi-modal route planning: Bus, Metro (all 3 lines), MMTS, auto-rickshaw last mile
+• Real GTFS data — 1,099+ RTC bus routes processed from official feeds
+• Live traffic, weather, and AQI conditions along your route
+• Safety analysis with risk zone alerts
+• Community RidePool with wallet and points system
+• Hyderabad mobility analytics — city-wide transit intelligence heatmap
+• Bilingual: English and Telugu (తెలుగు) with 180+ station name translations
+• Offline route planning — all computation happens on-device, no backend required
+• URL sharing: deep-link journeys with ?from=lat,lon&to=lat,lon
+• Accessibility: screen reader support, keyboard navigation, ARIA landmarks
+
+This is a Public Beta release (v0.9.0-beta). Route coverage and analytics continue to improve.
+Built with privacy in mind — no account required, no personal data collected.

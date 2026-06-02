@@ -1,0 +1,48 @@
+Categories:
+  - Navigation
+  - Science
+
+License: GPL-3.0-only
+
+AuthorName: Satvika
+AuthorEmail: tryaxistech@gmail.com
+
+SourceCode: https://github.com/satvika1115/TravelMate
+IssueTracker: https://github.com/satvika1115/TravelMate/issues
+
+AutoName: TravelMate Beta
+Name: TravelMate Beta
+Summary: Hyderabad smart transit planner — Bus, Metro, MMTS
+Description: |-
+  TravelMate Beta is a smart mobility planner for Hyderabad, India.
+  Plan multi-modal routes using Hyderabad Metro, MMTS suburban rail,
+  TSRTC buses, and community ride-pooling — all in one offline-capable app.
+
+  Features:
+  - Multimodal route planning: Bus, Metro (all 3 lines), MMTS, auto-rickshaw last mile
+  - Real GTFS data: 1,099+ RTC bus routes from official feeds
+  - Live traffic, weather, and AQI conditions along your route
+  - Safety analysis with risk zone alerts
+  - Community RidePool with wallet and points system
+  - Hyderabad mobility analytics — city-wide GIS transit intelligence heatmap
+  - Bilingual: English and Telugu with 180+ station name translations
+  - Offline route planning — all computation on-device, no backend required
+  - Accessibility: screen reader support, keyboard navigation, ARIA landmarks
+
+  This is a Public Beta release. No account required, no personal data collected.
+
+RepoType: git
+Repo: https://github.com/satvika1115/TravelMate.git
+
+Builds:
+  - versionName: 0.9.0-beta
+    versionCode: 1
+    commit: COMMIT_HASH_PLACEHOLDER
+    subdir: frontend/android
+    gradle:
+      - release
+
+AutoUpdateMode: None
+UpdateCheckMode: Tags
+CurrentVersion: 0.9.0-beta
+CurrentVersionCode: 1

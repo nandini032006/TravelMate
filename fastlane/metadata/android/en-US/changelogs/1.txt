@@ -1,0 +1,9 @@
+Public Beta v0.9.0-beta
+
+• Multimodal transit planning: Bus, Metro, MMTS
+• RidePool Beta with community wallet
+• Hyderabad mobility analytics (GIS heatmap)
+• Safety analysis and risk zone detection
+• Live traffic, weather, and AQI integration
+• Bilingual: English and Telugu
+• Offline-capable routing

@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build output
+dist/
+frontend/dist/
+
+# Android build artifacts (keep source, ignore compiled output)
+frontend/android/app/build/
+frontend/android/.gradle/
+frontend/android/build/
+*.apk
+*.aab
+TravelMate-*.zip
+
+# Android signing keystore — keep private, never commit
+*.jks
+*.keystore
+
+# Environment files — never commit real keys
+.env
+backend/.env
+frontend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Claude Code local config — not app code
+.claude/
+
+# AI tool configs — not app code
+CLAUDE.md
+.specify/
+
+# Stray empty files
+frontend/cd
+frontend/code
+frontend/npm
+frontend/npx

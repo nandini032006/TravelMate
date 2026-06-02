@@ -1,0 +1,21 @@
+{
+  "appId": "com.satvika.travelmate",
+  "appName": "TravelMate",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": false
+  },
+  "plugins": {
+    "Keyboard": {
+      "resize": "body",
+      "style": "dark",
+      "resizeOnFullScreen": true
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#f0f4f9",
+    "overrideUserAgent": "TravelMate Android"
+  }
+}

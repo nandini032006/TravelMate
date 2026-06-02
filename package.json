@@ -1,0 +1,14 @@
+{
+  "name": "travelmate-scripts",
+  "version": "1.0.0",
+  "description": "GTFS preprocessing pipeline for TravelMate",
+  "scripts": {
+    "process:bus":   "node scripts/processBusGTFS.js",
+    "process:metro": "node scripts/processMetroGTFS.js",
+    "process:mmts":  "node scripts/processMmtsGTFS.js",
+    "process:all":   "node scripts/processBusGTFS.js && node scripts/processMetroGTFS.js && node scripts/processMmtsGTFS.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6"
+  }
+}

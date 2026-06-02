@@ -1,0 +1,257 @@
+/* ── Route Results ────────────────────────────────────────────────────────── */
+.rr {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--panel-bg);
+}
+
+/* ── States ───────────────────────────────────────────────────────────────── */
+.rr--loading,
+.rr--error,
+.rr--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  flex: 1;
+}
+
+.rr__spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: rr-spin 0.7s linear infinite, rr-shimmer 1.5s ease-in-out infinite;
+}
+@keyframes rr-spin { to { transform: rotate(360deg); } }
+@keyframes rr-shimmer {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+.rr--error { color: #dc2626; }
+.rr__error-icon { font-size: 24px; }
+
+.rr--empty span { font-size: 30px; opacity: 0.4; }
+.rr--empty p    { max-width: 240px; line-height: 1.5; color: var(--text-muted); }
+
+/* ── Comparison bar ───────────────────────────────────────────────────────── */
+.rcb {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.rcb__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--panel-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.rcb__title {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-dim);
+}
+
+.rcb__count {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+.rcb__rows { padding: 0; }
+
+.rcb__row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+.rcb__row:last-child { border-bottom: none; }
+.rcb__row:hover { background: var(--panel-alt); }
+
+.rcb__row-cat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.rcb__row-icon  { font-size: 12px; line-height: 1; }
+.rcb__row-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.rcb__row-mode {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rcb__row-val {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* ── Mode section ─────────────────────────────────────────────────────────── */
+.rr__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rr__section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.rr__section-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.rr__section-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.rr__section-count {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+/* ── Mode list — vertical one-per-mode layout ────────────────────────────── */
+.rr__mode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rr__mode-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Mode section header ─────────────────────────────────────────────────── */
+.rr__mode-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px 2px;
+}
+
+.rr__mode-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid;
+  border-color: currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.rr__mode-label {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.rr__mode-avail {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #16a34a;
+  background: rgba(22,163,74,0.10);
+  border: 1px solid rgba(22,163,74,0.25);
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.rr__mode-unavail {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+/* ── Cards inside a mode section ─────────────────────────────────────────── */
+.rr__mode-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Unavailable notice inside a section ────────────────────────────────── */
+.rr__unavailable {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--panel-alt);
+  border: 1px dashed var(--border-med);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+/* ── Legacy: keep strategy grid hidden (not removed in case of rollback) ─── */
+.rr__strategies { display: none; }
+.rr__cards { display: none; }

@@ -1,0 +1,194 @@
+/* ── Navbar ───────────────────────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 56px;
+  padding: 0 20px;
+  background: rgba(255,255,255,0.96);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 300;
+  box-shadow: 0 1px 0 var(--border), 0 2px 8px rgba(15,23,42,0.05);
+  position: relative;
+  transition: border-bottom-color 0.2s ease;
+}
+
+/* ── Brand ────────────────────────────────────────────────────────────────── */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.navbar__logo-wrap {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.25);
+  flex-shrink: 0;
+}
+
+.navbar__brand-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar__name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.navbar__name-accent { color: var(--primary); }
+
+/* ── Beta badge ───────────────────────────────────────────────────────────── */
+.navbar__beta-badge {
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+  border-radius: 5px;
+  padding: 2px 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.navbar__city-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 8px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Status chips ─────────────────────────────────────────────────────────── */
+.navbar__chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar__chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 11px;
+  white-space: nowrap;
+}
+
+.navbar__chip--peak {
+  color: #c2410c;
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.navbar__chip--time {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
+
+.navbar__chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c2410c;
+  flex-shrink: 0;
+}
+
+.navbar__chip-dot--pulse {
+  animation: nb-pulse 1.5s ease-in-out infinite;
+}
+@keyframes nb-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.navbar__chip-sub {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+/* ── Actions ──────────────────────────────────────────────────────────────── */
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.navbar__lang {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.navbar__lang:hover {
+  color: var(--primary);
+  border-color: var(--primary-border);
+  background: var(--primary-bg);
+}
+
+/* ── Wallet chip ──────────────────────────────────────────────────────────── */
+.navbar__wallet {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.07), rgba(124,58,237,0.06));
+  border: 1px solid rgba(37,99,235,0.18);
+  border-radius: 20px;
+  cursor: default;
+  transition: all 0.15s;
+}
+.navbar__wallet:hover {
+  background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(124,58,237,0.10));
+  border-color: rgba(37,99,235,0.30);
+}
+.navbar__wallet-icon { font-size: 13px; line-height: 1; }
+.navbar__wallet-bal  { font-size: 12px; font-weight: 900; color: #2563eb; letter-spacing: -0.01em; }
+.navbar__wallet-unit { font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ── Mobile ───────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar { height: 50px; padding: 0 14px; }
+  .navbar__chips { gap: 4px; }
+  .navbar__chip--time { display: none; }
+  .navbar__city-badge { display: none; }
+  .navbar__name { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  .navbar__chips { display: none; }
+  .navbar__wallet-unit { display: none; }
+  .navbar__beta-badge { font-size: 8px; padding: 2px 5px; }
+}

@@ -1,0 +1,526 @@
+/* ── Route Card ───────────────────────────────────────────────────────────── */
+.rc {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--rc-accent, var(--border-med));
+  border-radius: var(--radius-lg);
+  padding: 13px 13px 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.12s;
+  user-select: none;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+.rc:hover {
+  background: var(--panel-alt);
+  box-shadow: var(--shadow-md);
+}
+.rc--selected {
+  background: var(--panel-alt);
+  border-color: var(--rc-accent, var(--border-med));
+  border-left-width: 4px;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06), var(--shadow-sm);
+}
+
+/* ── Badges ───────────────────────────────────────────────────────────────── */
+.rc__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.rc__badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 2px 9px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  background: var(--panel-alt);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.rc__badge--rec {
+  background: rgba(234,179,8,0.12);
+  color: #b45309;
+  border-color: rgba(234,179,8,0.3);
+}
+
+/* ── Mode header ──────────────────────────────────────────────────────────── */
+.rc__mode-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+.rc__mode-icon  { font-size: 18px; line-height: 1; }
+.rc__mode-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+.rc__line-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Bus line chips ───────────────────────────────────────────────────────── */
+.rc__bus-lines {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 8px;
+}
+.rc__bus-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #fff4ee;
+  color: #ea580c;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.01em;
+  border: 1px solid #fdd5bb;
+}
+.rc__bus-arrow { font-size: 13px; color: var(--text-dim); font-weight: 400; }
+
+/* ── Route endpoints ──────────────────────────────────────────────────────── */
+.rc__route {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+.rc__origin,
+.rc__dest {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 44%;
+}
+.rc__arrow { font-size: 11px; color: var(--text-dim); flex-shrink: 0; }
+
+/* ── Stats row ────────────────────────────────────────────────────────────── */
+.rc__stats {
+  display: flex;
+  align-items: center;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 12px;
+  margin-bottom: 9px;
+}
+.rc__stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+.rc__stat-icon { font-size: 12px; line-height: 1; flex-shrink: 0; }
+.rc__stat-val  { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; }
+.rc__stat-div  {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+/* ── ETA + crowd meta row ────────────────────────────────────────────────── */
+.rc__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: -4px;
+  margin-bottom: 7px;
+  padding: 0 1px;
+}
+.rc__eta {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  font-weight: 500;
+  margin-right: auto;
+}
+.rc__crowd-chip {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.rc__delay-chip {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(220,38,38,0.07);
+  border: 1px solid rgba(220,38,38,0.2);
+  color: #dc2626;
+  white-space: nowrap;
+}
+.rc__aqi-chip {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.1);
+  white-space: nowrap;
+}
+
+/* ── Live bar ─────────────────────────────────────────────────────────────── */
+.rc__live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.rc__live--loading { opacity: 0.6; }
+.rc__live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.rc__live-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.rc__live-fetching {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.rc__live-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+.rc__live-chip--free       { color: #16a34a; background: #f0fdf4; border-color: #bbf7d0; }
+.rc__live-chip--moderate   { color: #d97706; background: #fefce8; border-color: #fde68a; }
+.rc__live-chip--heavy      { color: #ea580c; background: #fff7ed; border-color: #fed7aa; }
+.rc__live-chip--standstill { color: #dc2626; background: #fef2f2; border-color: #fecaca; }
+.rc__live-chip--clear      { color: var(--text-muted); }
+
+/* ── Service badge ────────────────────────────────────────────────────────── */
+.rc__svc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.rc__svc-freq { font-weight: 500; opacity: 0.8; }
+
+/* ── Key stops ────────────────────────────────────────────────────────────── */
+.rc__stops {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.rc__stops-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.rc__stops-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.rc__stop-name    { font-size: 11px; color: var(--text-muted); }
+.rc__stops-dot    { font-size: 10px; color: var(--border-med); margin: 0 1px; }
+.rc__stops-ellipsis { font-size: 8px; letter-spacing: 2px; color: var(--text-dim); }
+
+/* ── Safety toggle ────────────────────────────────────────────────────────── */
+.rc__safety-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.rc__safety-toggle:hover { background: var(--panel-alt); border-color: var(--border-med); }
+.rc__safety-toggle--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.rc__safety-toggle--alert {
+  animation: rc-alert 2.5s ease-in-out infinite;
+}
+@keyframes rc-alert {
+  0%, 100% { box-shadow: none; }
+  50%       { box-shadow: 0 0 0 3px rgba(220,38,38,0.12); }
+}
+.rc__safety-toggle-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid;
+  letter-spacing: 0.03em;
+}
+.rc__safety-toggle-chev { font-size: 8px; color: var(--text-dim); flex-shrink: 0; }
+
+/* ── Safety pip ───────────────────────────────────────────────────────────── */
+.rc__safety-pip {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #dc2626;
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: rc-pip 1.2s ease-in-out infinite;
+}
+@keyframes rc-pip {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+/* ── Safety panel ─────────────────────────────────────────────────────────── */
+.rc__safety {
+  border: 1px solid;
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 10px 11px 12px;
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rc__safety-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rc__safety-title { font-size: 11px; font-weight: 700; color: var(--text); }
+.rc__safety-score { display: flex; align-items: baseline; gap: 2px; }
+.rc__safety-score-num  { font-size: 19px; font-weight: 800; line-height: 1; }
+.rc__safety-score-sep  { font-size: 10px; color: var(--text-dim); font-weight: 500; }
+.rc__safety-score-label {
+  font-size: 9px; font-weight: 800; padding: 2px 7px;
+  border-radius: 10px; letter-spacing: 0.04em; margin-left: 4px;
+}
+.rc__safety-zones { display: flex; flex-direction: column; gap: 6px; }
+.rc__safety-along {
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--text-dim);
+}
+.rc__safety-zone { display: flex; gap: 8px; align-items: flex-start; }
+.rc__safety-zone-num {
+  width: 17px; height: 17px; border-radius: 50%;
+  background: var(--border); color: var(--text-dim);
+  font-size: 9px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.rc__safety-zone-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rc__safety-zone-top  { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.rc__safety-zone-name   { font-size: 11px; font-weight: 700; color: var(--text); }
+.rc__safety-zone-badge  {
+  font-size: 8px; font-weight: 800; padding: 1px 6px;
+  border-radius: 8px; border: 1px solid; flex-shrink: 0;
+}
+.rc__safety-zone-active { font-size: 9px; font-weight: 700; color: #dc2626; flex-shrink: 0; }
+.rc__safety-zone-reason { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+.rc__safety-clear { font-size: 11px; color: #16a34a; font-weight: 600; margin: 0; }
+.rc__safety-peak  { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.rc__safety-peak-label {
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-dim);
+}
+.rc__safety-peak-val { font-weight: 600; color: var(--text); }
+.rc__safety-tip {
+  font-size: 11px; color: var(--text-muted); line-height: 1.5;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  background: var(--panel-alt); font-weight: 500;
+}
+
+/* ── Corridor profile in safety panel ────────────────────────────────────── */
+.rc__corridor-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rc__corridor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+  letter-spacing: 0.02em;
+  align-self: flex-start;
+}
+.rc__char-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.rc__char-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.rc__corridor-metrics {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+/* ── Steps toggle ─────────────────────────────────────────────────────────── */
+.rc__toggle {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  padding: 8px 0 2px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.15s;
+}
+.rc__toggle:hover { color: var(--primary-hover); }
+
+/* ── Steps ────────────────────────────────────────────────────────────────── */
+.rc__steps {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 7px;
+}
+
+/* ── Show on Map button ───────────────────────────────────────────────────── */
+.rc__map-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--map-color, var(--border-med));
+  background: rgba(0,0,0,0.03);
+  color: var(--map-color, var(--text-muted));
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, box-shadow 0.15s;
+  text-align: left;
+}
+.rc__map-btn:hover {
+  background: rgba(0,0,0,0.06);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+}
+.rc__map-btn--active {
+  background: rgba(0,0,0,0.05);
+}
+.rc__map-btn-icon { font-size: 14px; line-height: 1; flex-shrink: 0; }
+.rc__map-btn-chev { font-size: 9px; margin-left: auto; opacity: 0.7; }
+
+/* ── Inline map container ─────────────────────────────────────────────────── */
+.rc__map-wrap {
+  margin-top: 8px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.rc__inline-map {
+  width: 100%;
+  height: 240px;
+}
+
+.rc__map-nocoords {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--panel-alt);
+}
+
+/* ── Remove old view-details button if lingering ────────────────────────── */
+.rc__view-btn { display: none; }
+
+/* ── Mobile adjustments ───────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .rc__inline-map { height: 200px; }
+}

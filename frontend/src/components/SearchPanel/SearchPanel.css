@@ -1,0 +1,203 @@
+/* ── Search Panel ─────────────────────────────────────────────────────────── */
+.sp {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--panel-bg);
+}
+
+/* ── Section label ────────────────────────────────────────────────────────── */
+.sp__heading {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-dim);
+}
+
+/* ── Inputs block ─────────────────────────────────────────────────────────── */
+.sp__inputs {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--panel-alt);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: visible;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sp__inputs:focus-within {
+  border-color: var(--primary-border);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.sp__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* GPS button */
+.sp__gps {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  font-size: 15px;
+  padding: 4px;
+  z-index: 1;
+  opacity: 0.45;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
+.sp__gps:hover:not(:disabled) { opacity: 1; }
+.sp__gps:disabled { opacity: 0.25; cursor: not-allowed; }
+
+/* Divider + swap */
+.sp__swap-row {
+  display: flex;
+  align-items: center;
+  height: 1px;
+  position: relative;
+  margin: 0 14px;
+}
+
+.sp__connector {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.sp__swap {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--panel-bg);
+  border: 1.5px solid var(--border-med);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.08);
+}
+.sp__swap:hover {
+  border-color: var(--primary-border);
+  color: var(--primary);
+  background: var(--primary-bg);
+}
+
+/* ── Quick chips ──────────────────────────────────────────────────────────── */
+.sp__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sp__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+.sp__chip:hover {
+  color: var(--primary);
+  background: var(--primary-bg);
+  border-color: var(--primary-border);
+}
+.sp__chip--active {
+  color: var(--primary);
+  background: var(--primary-bg);
+  border-color: var(--primary-border);
+  font-weight: 700;
+}
+.sp__chip-icon { font-size: 12px; line-height: 1; }
+
+/* ── Actions ──────────────────────────────────────────────────────────────── */
+.sp__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sp__submit {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px 16px;
+  border-radius: var(--radius);
+  transition: background 0.15s, opacity 0.15s;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.25);
+}
+.sp__submit:hover:not(:disabled) { background: var(--primary-hover); }
+.sp__submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.sp__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: sp-spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes sp-spin { to { transform: rotate(360deg); } }
+
+.sp__share {
+  flex-shrink: 0;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 11px 13px;
+  border-radius: var(--radius);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sp__share:hover {
+  border-color: var(--primary-border);
+  color: var(--primary);
+  background: var(--primary-bg);
+}
+.sp__share--copied {
+  border-color: var(--primary-border);
+  color: var(--primary);
+  background: var(--primary-bg);
+}
+
+@media (max-width: 480px) {
+  .sp { padding: 12px 12px 12px; }
+}

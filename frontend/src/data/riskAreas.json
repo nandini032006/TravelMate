@@ -1,0 +1,282 @@
+[
+  {
+    "name": "Kothaguda Flyover",
+    "lat": 17.4510, "lon": 78.3740,
+    "riskLevel": "very_high",
+    "monsoonRisk": true,
+    "reasons": ["Faulty flyover design — blind curve & sudden split", "Flood-prone — waist-deep waterlogging in monsoon"],
+    "source": "The News Minute, Deccan Chronicle 2024"
+  },
+  {
+    "name": "Hitech City / Raidurgam Junction",
+    "lat": 17.4480, "lon": 78.3730,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Drunk driving hotspot — BAC 550, 6 accidents in one run April 2024", "Heavy IT traffic — peak congestion morning and evening"],
+    "source": "Telangana Today, The South First 2024"
+  },
+  {
+    "name": "ORR near Shamirpet (Exit 15)",
+    "lat": 17.5630, "lon": 78.5700,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Overspeeding 140–160 km/h", "Vehicles hitting stationary trucks at night"],
+    "source": "Telangana Today, ETV Bharat 2024"
+  },
+  {
+    "name": "PVNR Expressway near Rajendranagar",
+    "lat": 17.3580, "lon": 78.4220,
+    "riskLevel": "very_high",
+    "monsoonRisk": true,
+    "reasons": ["Car rammed divider at pillar 296 — fatal crash 2024", "Overspeeding on elevated stretch at night"],
+    "source": "Telangana Today, Siasat 2024"
+  },
+  {
+    "name": "Dundigal / Petbasheerabad Road",
+    "lat": 17.6100, "lon": 78.4250,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Top ACP division for Cyberabad fatalities", "Outskirt highway — thin traffic + high speed"],
+    "source": "Cyberabad Police / Deccan Chronicle 2024"
+  },
+  {
+    "name": "ORR near Shamshabad (Exit 1)",
+    "lat": 17.2400, "lon": 78.4000,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["6 killed when car hit stationary lorry", "High-speed corridor with poor lighting"],
+    "source": "Telangana Today 2024"
+  },
+  {
+    "name": "Sujithra–Kompally Stretch",
+    "lat": 17.5350, "lon": 78.4700,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Dangerously low road divider — commuters cross to avoid U-turns", "8 km death-trap stretch with school and residential traffic"],
+    "source": "Deccan Chronicle 2024"
+  },
+  {
+    "name": "Botanical Garden Road / IKEA Rotary",
+    "lat": 17.4410, "lon": 78.3590,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Drunk driving — multiple collisions same stretch April 2024", "Overspeeding after pub closing hours"],
+    "source": "The South First 2024"
+  },
+  {
+    "name": "PVNR Expressway near Attapur",
+    "lat": 17.3740, "lon": 78.4340,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Techie death on this stretch — overspeeding into curve", "Elevated road + no barrier gaps"],
+    "source": "Siasat.com 2024"
+  },
+  {
+    "name": "Kompally Flyover",
+    "lat": 17.5490, "lon": 78.4810,
+    "riskLevel": "very_high",
+    "monsoonRisk": false,
+    "reasons": ["Faulty flyover design — multiple bike accidents after flyover end", "Abrupt merge with main road during school rush"],
+    "source": "Deccan Chronicle 2024"
+  },
+  {
+    "name": "Masjid Banda–Kondapur Main Road",
+    "lat": 17.4565, "lon": 78.3630,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Overspeeding, loss of control — car hit traffic outpost 2024", "IT employee late-night commute risk"],
+    "source": "Daily Hunt / Hans India 2024"
+  },
+  {
+    "name": "ORR Ghatkesar Stretch",
+    "lat": 17.4150, "lon": 78.7150,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Tyre burst + rollover — Bolero overturn fatality", "High-speed ORR exit merges at night"],
+    "source": "Telangana Today"
+  },
+  {
+    "name": "ORR Muthangi / Patancheru",
+    "lat": 17.5260, "lon": 78.2030,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Hit-and-run, high speed — woman killed 2024", "Industrial truck traffic at late night"],
+    "source": "Telangana Today 2024"
+  },
+  {
+    "name": "NH65 Shamshabad Flyover",
+    "lat": 17.2590, "lon": 78.4020,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Loss of control on flyover — revenue official killed 2024", "National highway + high speed near Shamshabad airport approach"],
+    "source": "Telangana Today 2024"
+  },
+  {
+    "name": "Medchal Main Road",
+    "lat": 17.6280, "lon": 78.4820,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["17 pedestrian fatalities in 2025", "Outskirt highway — no footpaths, high speed"],
+    "source": "Cyberabad Police 2025"
+  },
+  {
+    "name": "ORR Nanakramguda / Financial District Exit",
+    "lat": 17.4100, "lon": 78.3600,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Overspeeding, poor lane discipline near IT exit", "IT employee commute overload — morning and late evening"],
+    "source": "HMDA / ETV Bharat"
+  },
+  {
+    "name": "Jubilee Hills Check Post / Road No. 36",
+    "lat": 17.4325, "lon": 78.4070,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Drunk driving hub — 33 DUI cases on New Year night alone", "Active police enforcement zone near pubs and restaurants"],
+    "source": "Deccan Chronicle, M9 News 2026"
+  },
+  {
+    "name": "Gachibowli HP Petrol Pump Stretch",
+    "lat": 17.4480, "lon": 78.3560,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Drunk driving flashpoint — same April 2024 rampage incident", "Late-night bar and lounge traffic"],
+    "source": "The South First 2024"
+  },
+  {
+    "name": "Bachupally Junction",
+    "lat": 17.5330, "lon": 78.3840,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Schoolgirl death — pedestrian fatality Aug 2023", "Congestion + uncontrolled pedestrian crossings near school zones"],
+    "source": "Siasat.com 2023"
+  },
+  {
+    "name": "Banjara Hills Road No. 12",
+    "lat": 17.4171, "lon": 78.4494,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["26 DUI cases on New Year night", "Bar and restaurant concentration — drunk driving zone"],
+    "source": "Prokerala, Telangana Today"
+  },
+  {
+    "name": "Uppal Crossroads",
+    "lat": 17.4050, "lon": 78.5590,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Lorry rammed multiple vehicles — student killed", "Heavy goods vehicle + mixed traffic at busy crossroads"],
+    "source": "Hans India, Hyderabad Mail 2024"
+  },
+  {
+    "name": "Madhapur / Cyber Towers Junction",
+    "lat": 17.4497, "lon": 78.3794,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["Peak congestion — heavy IT employee + cab traffic", "Pedestrian risk at uncontrolled crossings near Cyber Towers"],
+    "source": "Hyderabad Traffic Police"
+  },
+  {
+    "name": "Tolichowki Underpass",
+    "lat": 17.4050, "lon": 78.4120,
+    "riskLevel": "high",
+    "monsoonRisk": true,
+    "reasons": ["Low underpass — flash flood risk in heavy rain", "Evening food street and market traffic causes gridlock"],
+    "source": "Traffic Police advisories 2024"
+  },
+  {
+    "name": "Malakpet / Chatrinaka",
+    "lat": 17.3710, "lon": 78.5110,
+    "riskLevel": "high",
+    "monsoonRisk": true,
+    "reasons": ["Chronic waterlogging — vehicles swept, traffic halted in monsoon", "Low-lying area with poor drainage and market congestion"],
+    "source": "HTP waterlogging advisories"
+  },
+  {
+    "name": "Secunderabad–Tarnaka Main Road",
+    "lat": 17.4270, "lon": 78.5390,
+    "riskLevel": "high",
+    "monsoonRisk": true,
+    "reasons": ["Fuel tanker overturn Dec 2024", "Waterlogging-prone — blind turns + dense railway commuter traffic"],
+    "source": "Telangana Today 2024"
+  },
+  {
+    "name": "PVNR Expressway / Praja Bhavan",
+    "lat": 17.3960, "lon": 78.4720,
+    "riskLevel": "high",
+    "monsoonRisk": true,
+    "reasons": ["Overspeeding on elevated corridor", "Waterlogging risk in monsoon — flash flooding under expressway"],
+    "source": "Deccan Chronicle 2024"
+  },
+  {
+    "name": "Punjagutta Junction / Khairatabad",
+    "lat": 17.4278, "lon": 78.4505,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": false,
+    "reasons": ["Heavy congestion + pedestrian conflict — major multi-road junction", "Commercial zone with uncontrolled crossings and bus stop conflicts"],
+    "source": "Hyderabad Traffic Police"
+  },
+  {
+    "name": "Kukatpally / Karbala Maidan",
+    "lat": 17.4850, "lon": 78.3990,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": true,
+    "reasons": ["Dense mixed traffic + waterlogging gridlock in monsoon", "High bus + auto concentration near school and residential zones"],
+    "source": "HTP advisories 2024"
+  },
+  {
+    "name": "Tarnaka / Mettuguda Stretch",
+    "lat": 17.4290, "lon": 78.5400,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": true,
+    "reasons": ["Waterlogging on main road", "Blind turns + dense mixed traffic near Osmania University area"],
+    "source": "Telangana Today Dec 2024"
+  },
+  {
+    "name": "NH65 Turkapally / Shamirpet",
+    "lat": 17.5620, "lon": 78.5760,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": false,
+    "reasons": ["Car hit stationary container truck — 2 killed", "National highway — inadequate lighting and no shoulder"],
+    "source": "Telangana Today"
+  },
+  {
+    "name": "Shadnagar (NH44 / ORR Junction)",
+    "lat": 17.0690, "lon": 78.2050,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": false,
+    "reasons": ["Major accident cluster — outskirt highway concentration", "Heavy truck movement at night on NH44"],
+    "source": "Cyberabad Police"
+  },
+  {
+    "name": "RTC Crossroads / Steel Bridge",
+    "lat": 17.4440, "lon": 78.4980,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": true,
+    "reasons": ["Bridge-level flooding — listed in HTP official waterlogging advisory", "Heavy bus + pedestrian congestion at RTC terminus"],
+    "source": "Deccan Chronicle, HTP 2024"
+  },
+  {
+    "name": "Dabeerpura / Musheerabad",
+    "lat": 17.4180, "lon": 78.4880,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": true,
+    "reasons": ["Chronic waterlogging — listed in HTP flood advisories", "Old city narrow roads + market congestion throughout the day"],
+    "source": "HTP 2024"
+  },
+  {
+    "name": "Financial District (Late Night)",
+    "lat": 17.4150, "lon": 78.3580,
+    "riskLevel": "high",
+    "monsoonRisk": false,
+    "reasons": ["IT employee late commute — high-speed near ORR exit", "Poor lighting on service roads — accident prone at night"],
+    "source": "HMDA / ETV Bharat"
+  },
+  {
+    "name": "Ameerpet Metro Interchange",
+    "lat": 17.4374, "lon": 78.4487,
+    "riskLevel": "moderate_high",
+    "monsoonRisk": false,
+    "reasons": ["Metro interchange overload — pedestrian congestion spills onto road", "Auto + bus conflict at junction — peak hour gridlock"],
+    "source": "Hyderabad Traffic Police"
+  }
+]

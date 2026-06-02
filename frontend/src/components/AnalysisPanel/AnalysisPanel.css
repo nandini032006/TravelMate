@@ -1,0 +1,1011 @@
+/* ── Analysis Panel ───────────────────────────────────────────────────────── */
+.ap {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--panel-bg);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 15;
+  box-shadow: -2px 0 12px rgba(15,23,42,0.06);
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.ap__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--panel-bg);
+}
+
+.ap__header-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.ap__live-chip,
+.ap__loading-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 3px 9px;
+}
+
+.ap__live-chip    { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+.ap__loading-chip { background: var(--panel-alt); color: var(--text-muted); border: 1px solid var(--border); }
+
+.ap__live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  animation: ap-blink 1.4s ease-in-out infinite;
+}
+.ap__loading-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  animation: ap-blink 0.8s ease-in-out infinite;
+}
+@keyframes ap-blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+/* ── Body ─────────────────────────────────────────────────────────────────── */
+.ap__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 24px;
+}
+
+.ap__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Overview card ────────────────────────────────────────────────────────── */
+.ap__overview {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.ap__overview-route {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.ap__overview-stop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ap__overview-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid #fff;
+}
+.ap__overview-dot--from { background: #16a34a; box-shadow: 0 0 0 1px #16a34a; }
+.ap__overview-dot--to   { background: #dc2626; box-shadow: 0 0 0 1px #dc2626; }
+
+.ap__overview-line {
+  width: 2px; height: 14px;
+  background: linear-gradient(#16a34a, #dc2626);
+  border-radius: 1px;
+  margin-left: 4px;
+  opacity: 0.4;
+}
+
+.ap__overview-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px;
+}
+
+.ap__overview-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.ap__overview-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #15803d;
+}
+.ap__overview-stat-icon { font-size: 12px; }
+.ap__overview-stat-val  { color: #0f172a; }
+
+/* ── Section ──────────────────────────────────────────────────────────────── */
+.ap__section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ap__section:last-child { border-bottom: none; }
+
+.ap__section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+.ap__section-note { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 7px; }
+.ap__section-note--warn { color: #c2410c; }
+.ap__section-note--ok   { color: #16a34a; }
+
+/* ── Traffic chip ─────────────────────────────────────────────────────────── */
+.ap__traffic-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ap__traffic-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ap__traffic-label { font-size: 12px; }
+
+/* ── Weather ──────────────────────────────────────────────────────────────── */
+.ap__weather-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ap__weather-temp { font-size: 24px; font-weight: 800; color: var(--text); }
+.ap__weather-desc { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+/* ── Safety score ─────────────────────────────────────────────────────────── */
+.ap__score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.ap__score-bar-wrap { flex: 1; }
+.ap__score-bar-track {
+  height: 7px;
+  background: var(--panel-alt);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ap__score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+.ap__score-val {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.ap__score-num   { font-size: 20px; font-weight: 800; }
+.ap__score-label {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* ── Risk zones ───────────────────────────────────────────────────────────── */
+.ap__zones       { display: flex; flex-direction: column; gap: 8px; }
+.ap__zones-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.ap__zone {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 9px 11px;
+  background: var(--panel-alt);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.ap__zone-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.ap__zone-body  { flex: 1; min-width: 0; }
+.ap__zone-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+.ap__zone-active {
+  font-size: 10px;
+  font-weight: 700;
+  color: #dc2626;
+}
+.ap__zone-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 8px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.ap__zone-reason { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+/* ── Tip ──────────────────────────────────────────────────────────────────── */
+.ap__tip {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 12px;
+  padding: 9px 11px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: var(--radius);
+}
+.ap__tip p { font-size: 11.5px; color: #92400e; line-height: 1.5; font-weight: 500; }
+
+/* ── Travel time ──────────────────────────────────────────────────────────── */
+.ap__time-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.ap__time-badge--ok   { background: #dcfce7; color: #15803d; }
+.ap__time-badge--warn { background: #fff7ed; color: #c2410c; }
+
+.ap__peak-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.ap__peak-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+.ap__peak-item--avoid { background: #fff1f2; color: #be123c; }
+.ap__peak-item--ok    { background: #f0fdf4; color: #15803d; }
+.ap__peak-sub { margin-left: auto; font-size: 10px; font-weight: 500; opacity: 0.75; }
+
+/* ── Empty state ──────────────────────────────────────────────────────────── */
+.ap__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 18px;
+  gap: 10px;
+}
+.ap__empty-icon  { font-size: 44px; opacity: 0.25; }
+.ap__empty-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.ap__empty-sub   { font-size: 12px; color: var(--text-muted); line-height: 1.6; max-width: 220px; }
+
+.ap__empty-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 8px;
+}
+.ap__empty-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+}
+
+/* ── Smart alerts ─────────────────────────────────────────────────────────── */
+.ap__alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ap__alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+}
+.ap__alert--high     { background: #fff1f2; border-color: #fecaca; }
+.ap__alert--moderate { background: #fffbeb; border-color: #fde68a; }
+
+.ap__alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; line-height: 1.4; }
+.ap__alert-text { font-size: 11.5px; color: var(--text-muted); line-height: 1.45; font-weight: 500; }
+.ap__alert--high .ap__alert-text     { color: #991b1b; }
+.ap__alert--moderate .ap__alert-text { color: #92400e; }
+
+/* ── Traffic enhancements ─────────────────────────────────────────────────── */
+.ap__traffic-pct {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.75;
+  margin-left: 2px;
+}
+.ap__traffic-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.ap__traffic-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.ap__traffic-stat--warn { color: #c2410c; }
+
+/* ── Weather enhancements ─────────────────────────────────────────────────── */
+.ap__weather-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.ap__weather-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ap__weather-feels {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.ap__weather-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+.ap__weather-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 8px;
+}
+.ap__weather-chip--rain { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.ap__weather-chip--heat { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+/* rain intensity chip variants */
+.ap__weather-chip--rain-heavy { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+.ap__weather-chip--rain-light { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.ap__weather-chip--rain-moderate { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.ap__weather-chip--vis-low { background: #f5f3ff; color: #6d28d9; border-color: #ddd6fe; }
+.ap__weather-chip--vis-moderate { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.ap__weather-chip--vis-high { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+
+/* ── AQI section ──────────────────────────────────────────────────────────── */
+.ap__aqi-row { margin-bottom: 10px; }
+.ap__aqi-score {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ap__aqi-num {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ap__aqi-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ap__aqi-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 9px;
+  border-radius: 10px;
+  border: 1px solid;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.ap__aqi-sub {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.ap__aqi-bar-wrap { margin-bottom: 4px; }
+.ap__aqi-bar {
+  height: 6px;
+  background: var(--panel-alt);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.ap__aqi-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+.ap__aqi-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ── Safety score legend ──────────────────────────────────────────────────── */
+.ap__score-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+  margin-bottom: 10px;
+}
+.ap__score-legend-item { font-size: 9px; font-weight: 700; opacity: 0.75; }
+
+/* ── Best travel time (new) ───────────────────────────────────────────────── */
+.ap__time-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border-radius: var(--radius);
+  border: 1px solid;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.ap__time-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: ap-blink 1.6s ease-in-out infinite;
+}
+.ap__time-status-text { flex: 1; }
+
+.ap__time-status--ok       { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+.ap__time-status--ok       .ap__time-status-dot { background: #22c55e; }
+.ap__time-status--moderate { background: #fefce8; border-color: #fde68a; color: #854d0e; }
+.ap__time-status--moderate .ap__time-status-dot { background: #d97706; }
+.ap__time-status--warn     { background: #fff7ed; border-color: #fed7aa; color: #c2410c; }
+.ap__time-status--warn     .ap__time-status-dot { background: #f97316; }
+.ap__time-status--danger   { background: #fff1f2; border-color: #fecaca; color: #991b1b; }
+.ap__time-status--danger   .ap__time-status-dot { background: #dc2626; }
+
+.ap__time-window {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 8px 11px;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+  margin-bottom: 7px;
+  font-size: 11px;
+}
+.ap__time-window--peak     { background: #fff7ed; border-color: #fed7aa; }
+.ap__time-window--night    { background: #f5f3ff; border-color: #ddd6fe; }
+.ap__time-window--upcoming { background: #eff6ff; border-color: #bfdbfe; }
+
+.ap__time-window-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.ap__time-window-body { flex: 1; min-width: 0; }
+.ap__time-window-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.ap__time-window-areas { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+
+.ap__crowd-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.ap__crowd-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.ap__crowd-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.ap__time-best,
+.ap__time-avoid,
+.ap__time-weekend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 5px 0;
+  border-radius: 4px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.ap__time-best  { color: #15803d; }
+.ap__time-avoid { color: #c2410c; font-weight: 600; }
+.ap__time-weekend { color: #6d28d9; }
+
+/* ── Risk breakdown ───────────────────────────────────────────────────────── */
+.ap__risk-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.ap__risk-row {
+  display: grid;
+  grid-template-columns: 95px 1fr 32px;
+  align-items: center;
+  gap: 7px;
+}
+.ap__risk-label { font-size: 10px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.ap__risk-bar-wrap { height: 5px; background: var(--panel-alt); border-radius: 3px; overflow: hidden; }
+.ap__risk-bar-fill  { height: 100%; border-radius: 3px; }
+.ap__risk-score { font-size: 10px; font-weight: 800; text-align: right; }
+
+/* ── Infrastructure chips ─────────────────────────────────────────────────── */
+.ap__infra-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 9px;
+}
+.ap__infra-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.ap__infra-chip--warn { background: #fff7ed; border-color: #fed7aa; color: #c2410c; }
+
+/* ── Live insights ────────────────────────────────────────────────────────── */
+.ap__insights { margin-top: 10px; }
+.ap__insights-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 7px;
+}
+.ap__insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  padding: 3px 0;
+}
+.ap__insight-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+/* ── Estimated badge ──────────────────────────────────────────────────────── */
+.ap__est-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(100,116,139,0.12);
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  margin-left: 4px;
+}
+.ap__est-tag {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-dim);
+  opacity: 0.8;
+  margin-left: auto;
+  padding-left: 6px;
+}
+
+/* ── Corridor profile ─────────────────────────────────────────────────────── */
+.ap__corridor {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ap__corridor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ap__corridor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.ap__corridor-metrics {
+  display: flex;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+.ap__corridor-metrics span { white-space: nowrap; }
+
+/* ── Characteristic chips ─────────────────────────────────────────────────── */
+.ap__char-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ap__char-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Mobility Score ───────────────────────────────────────────────────────── */
+.ap__ms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.ap__ms-ring-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.ap__ms-ring {
+  width: 56px;
+  height: 56px;
+}
+
+.ap__ms-ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ap__ms-score {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.ap__ms-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ap__ms-label {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 2px 9px;
+}
+
+.ap__ms-confidence {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.ap__ms-positive {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #16a34a;
+}
+
+.ap__ms-positive span:first-child {
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.ap__ms-factors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ap__ms-factor {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  background: var(--panel-alt);
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.ap__ms-factor-icon { font-size: 11px; flex-shrink: 0; }
+.ap__ms-factor-label { flex: 1; }
+
+.ap__ms-factor-penalty {
+  font-weight: 700;
+  color: #ea580c;
+  font-size: 10px;
+}
+
+/* ── Zone Peak Profiles ───────────────────────────────────────────────────── */
+.ap__zone-peaks { display: flex; flex-direction: column; gap: 7px; }
+
+.ap__zone-peak {
+  padding: 9px 11px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  border-left: 3px solid #d97706;
+}
+
+.ap__zone-peak--active { border-left-color: #dc2626; background: rgba(220,38,38,0.04); }
+
+.ap__zone-peak-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ap__zone-peak-name { font-size: 11px; font-weight: 700; color: var(--text); }
+.ap__zone-peak-type { font-size: 9px; font-weight: 600; color: var(--text-muted); }
+
+.ap__zone-peak-now {
+  font-size: 9px;
+  font-weight: 800;
+  color: #dc2626;
+  margin-bottom: 3px;
+}
+
+.ap__zone-peak-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.ap__zone-peak-monsoon {
+  font-size: 10px;
+  color: #3b82f6;
+  margin-top: 4px;
+}
+
+/* ── First & Last Mile ────────────────────────────────────────────────────── */
+.ap__mile-cards { display: flex; flex-direction: column; gap: 8px; }
+
+.ap__mile-card {
+  padding: 10px 11px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.ap__mile-tag {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.ap__mile-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ap__mile-icon { font-size: 18px; }
+.ap__mile-info { flex: 1; }
+.ap__mile-name { font-size: 12px; font-weight: 700; color: var(--text); }
+.ap__mile-line { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+.ap__mile-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ap__mile-stat   { font-size: 10px; color: var(--text-muted); }
+.ap__mile-access { font-size: 10px; font-weight: 600; color: var(--primary); }
+
+.ap__mile-note {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid var(--border);
+  font-style: italic;
+}
+
+.ap__weather-impact {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid;
+  margin-top: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.ap__weather-impact-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Hidden below 1200px ──────────────────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .ap { display: none; }
+}
+
+/* ── Skeleton loading state ───────────────────────────────────────────────── */
+@keyframes ap-skeleton-pulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 0.85; }
+}
+
+.ap__skeleton-section { pointer-events: none; }
+
+.ap__skeleton-title {
+  height: 12px;
+  width: 110px;
+  border-radius: 6px;
+  background: var(--border);
+  margin-bottom: 12px;
+  animation: ap-skeleton-pulse 1.5s ease-in-out infinite;
+}
+.ap__skeleton-row {
+  height: 10px;
+  width: 100%;
+  border-radius: 5px;
+  background: var(--border);
+  margin-bottom: 8px;
+  animation: ap-skeleton-pulse 1.5s ease-in-out infinite;
+}
+.ap__skeleton-row--short { width: 65%; }
+
+.ap__skeleton-chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.ap__skeleton-chip {
+  height: 22px;
+  width: 64px;
+  border-radius: 11px;
+  background: var(--border);
+  animation: ap-skeleton-pulse 1.5s ease-in-out infinite;
+}
+.ap__skeleton-chip--md { width: 80px; }
+.ap__skeleton-chip--sm { width: 48px; }
+
+/* ── Text overflow guards ─────────────────────────────────────────────────── */
+.ap__overview-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+.ap__mile-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ap__section-note {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.ap__alert-text {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.45;
+}
+.ap__insight-item {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}

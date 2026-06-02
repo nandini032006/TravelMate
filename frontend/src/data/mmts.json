@@ -1,0 +1,757 @@
+{
+  "stops": {
+    "HYB": {
+      "name": "HYDERABAD",
+      "lat": 17.39245,
+      "lon": 78.46759
+    },
+    "LKPL": {
+      "name": "LAKDIKAPUL",
+      "lat": 17.403717999999998,
+      "lon": 78.463197
+    },
+    "KQD": {
+      "name": "KHAIRATABAD",
+      "lat": 17.41298,
+      "lon": 78.46106
+    },
+    "NLRD": {
+      "name": "NECKLACE ROAD",
+      "lat": 17.423578,
+      "lon": 78.463111
+    },
+    "BMT": {
+      "name": "BEGUMPET",
+      "lat": 17.43868,
+      "lon": 78.45817
+    },
+    "NCHS": {
+      "name": "NATURE CURE HOSPITAL",
+      "lat": 17.44572,
+      "lon": 78.45221
+    },
+    "FNB": {
+      "name": "FATEHNAGAR",
+      "lat": 17.45588,
+      "lon": 78.45008
+    },
+    "BTNR": {
+      "name": "BHARATNAGAR",
+      "lat": 17.46256,
+      "lon": 78.43016
+    },
+    "BRBD": {
+      "name": "BORABANDA",
+      "lat": 17.45918,
+      "lon": 78.40782
+    },
+    "HTCY": {
+      "name": "HITECH CITY",
+      "lat": 17.46978,
+      "lon": 78.38524100000002
+    },
+    "HFZ": {
+      "name": "HAFIZPETA",
+      "lat": 17.482695,
+      "lon": 78.363075
+    },
+    "CDNR": {
+      "name": "CHANDANAGAR",
+      "lat": 17.48738,
+      "lon": 78.33271
+    },
+    "LPI": {
+      "name": "LINGAMPALLI",
+      "lat": 17.483083999999998,
+      "lon": 78.31698399999998
+    },
+    "RCPT": {
+      "name": "RAMACHANDRAPURAM TS",
+      "lat": 17.511305,
+      "lon": 78.28248
+    },
+    "BHEL": {
+      "name": "BHEL HALT",
+      "lat": 17.502301,
+      "lon": 78.282051
+    },
+    "TLPR": {
+      "name": "TELAPUR",
+      "lat": 17.474877,
+      "lon": 78.284883
+    },
+    "FM": {
+      "name": "FALAKNUMA",
+      "lat": 17.33272,
+      "lon": 78.47516
+    },
+    "HPG": {
+      "name": "HUPPUGUDA",
+      "lat": 17.34132,
+      "lon": 78.48244
+    },
+    "YKA": {
+      "name": "YAKUTPURA",
+      "lat": 17.36001,
+      "lon": 78.49207
+    },
+    "DQR": {
+      "name": "DABIRPURA",
+      "lat": 17.36659,
+      "lon": 78.49037
+    },
+    "MXT": {
+      "name": "MALAKPET",
+      "lat": 17.37664,
+      "lon": 78.4948
+    },
+    "KCG": {
+      "name": "KACHEGUDA",
+      "lat": 17.389651,
+      "lon": 78.49984599999998
+    },
+    "VAR": {
+      "name": "VIDYA NAGAR",
+      "lat": 17.40218,
+      "lon": 78.51121
+    },
+    "JOO": {
+      "name": "JAMAI OSMANIA",
+      "lat": 17.4116,
+      "lon": 78.51839
+    },
+    "ATC": {
+      "name": "ARTS COLLEGE",
+      "lat": 17.41846,
+      "lon": 78.519995
+    },
+    "STPD": {
+      "name": "SITAFALMANDI",
+      "lat": 17.42839,
+      "lon": 78.51961
+    },
+    "SC": {
+      "name": "SECUNDERABAD",
+      "lat": 17.43374,
+      "lon": 78.50158
+    },
+    "JET": {
+      "name": "JAMES STREET",
+      "lat": 17.43287,
+      "lon": 78.48722
+    },
+    "SJVP": {
+      "name": "SANJEEVAIAH PARK",
+      "lat": 17.43561,
+      "lon": 78.47672
+    },
+    "BG": {
+      "name": "BHONGIR",
+      "lat": 17.525056,
+      "lon": 78.89883
+    },
+    "BN": {
+      "name": "BIBINAGAR",
+      "lat": 17.470681,
+      "lon": 78.794525
+    },
+    "GT": {
+      "name": "GHATKESAR",
+      "lat": 17.453016,
+      "lon": 78.678117
+    },
+    "CHZ": {
+      "name": "CHARLAPALLI",
+      "lat": 17.458072,
+      "lon": 78.60601899999997
+    },
+    "MJF": {
+      "name": "MALKAJGIRI",
+      "lat": 17.448022,
+      "lon": 78.529236
+    },
+    "LGDH": {
+      "name": "LALAGUDA GATE",
+      "lat": 17.440775,
+      "lon": 78.524823
+    },
+    "RAG": {
+      "name": "RAIGIR",
+      "lat": 17.551081,
+      "lon": 78.941402
+    },
+    "WP": {
+      "name": "WANGAPALLI",
+      "lat": 17.580867,
+      "lon": 78.983974
+    },
+    "ALER": {
+      "name": "ALER",
+      "lat": 17.6454853,
+      "lon": 79.0478714
+    },
+    "PBP": {
+      "name": "PEMBARTI",
+      "lat": 17.691945999999994,
+      "lon": 79.11581
+    },
+    "ZN": {
+      "name": "JANGAON",
+      "lat": 17.724815,
+      "lon": 79.154434
+    },
+    "BMO": {
+      "name": "BOLARUM",
+      "lat": 17.5332793,
+      "lon": 78.5151467
+    },
+    "BOZ": {
+      "name": "BOLARUM BAZAR",
+      "lat": 17.51764,
+      "lon": 78.51568
+    },
+    "ALW": {
+      "name": "ALWAL HALT",
+      "lat": 17.505289,
+      "lon": 78.514516
+    },
+    "CVB": {
+      "name": "CAVALRY BARRCKS",
+      "lat": 17.494934,
+      "lon": 78.51889399999997
+    },
+    "AMQ": {
+      "name": "AMMUGUDA",
+      "lat": 17.486829,
+      "lon": 78.527005
+    },
+    "RKO": {
+      "name": "RMKRSHNAPRM GTE",
+      "lat": 17.476719,
+      "lon": 78.52889300000002
+    },
+    "SFX": {
+      "name": "SAFILGUDA",
+      "lat": 17.461531,
+      "lon": 78.53296999999998
+    },
+    "DYE": {
+      "name": "DAYANAND NAGAR",
+      "lat": 17.456537,
+      "lon": 78.53164
+    },
+    "NSVP": {
+      "name": "NPA SHIVRAMPALLI",
+      "lat": 17.32359,
+      "lon": 78.4374
+    },
+    "BDVL": {
+      "name": "BUDVEL",
+      "lat": 17.3098373,
+      "lon": 78.4249782
+    },
+    "UR": {
+      "name": "UMDANAGAR",
+      "lat": 17.263162,
+      "lon": 78.393373
+    },
+    "MED": {
+      "name": "MEDCHAL",
+      "lat": 17.63995,
+      "lon": 78.47528
+    },
+    "GWV": {
+      "name": "GOWDAVALLI",
+      "lat": 17.61075,
+      "lon": 78.46827
+    },
+    "GDPL": {
+      "name": "G POCHAMPALLI",
+      "lat": 17.56896,
+      "lon": 78.48779
+    }
+  },
+  "routes": {
+    "HYB-LPI": {
+      "line_name": "HYB-LPI",
+      "color": "#8B5A2B",
+      "frequency_mins": 45,
+      "is_premium": false,
+      "stops": [
+        "HYB",
+        "LKPL",
+        "KQD",
+        "NLRD",
+        "BMT",
+        "NCHS",
+        "FNB",
+        "BTNR",
+        "BRBD",
+        "HTCY",
+        "HFZ",
+        "CDNR",
+        "LPI"
+      ]
+    },
+    "LPI-HYB": {
+      "line_name": "LPI-HYB",
+      "color": "#8B5A2B",
+      "frequency_mins": 45,
+      "is_premium": false,
+      "stops": [
+        "RCPT",
+        "BHEL",
+        "TLPR",
+        "LPI",
+        "CDNR",
+        "HFZ",
+        "HTCY",
+        "BRBD",
+        "BTNR",
+        "FNB",
+        "NCHS",
+        "BMT",
+        "NLRD",
+        "KQD",
+        "LKPL",
+        "HYB"
+      ]
+    },
+    "FM-LPI": {
+      "line_name": "FM-LPI",
+      "color": "#8B5A2B",
+      "frequency_mins": 45,
+      "is_premium": false,
+      "stops": [
+        "FM",
+        "HPG",
+        "YKA",
+        "DQR",
+        "MXT",
+        "KCG",
+        "VAR",
+        "JOO",
+        "ATC",
+        "STPD",
+        "SC",
+        "JET",
+        "SJVP",
+        "BMT",
+        "NCHS",
+        "FNB",
+        "BTNR",
+        "BRBD",
+        "HTCY",
+        "HFZ",
+        "CDNR",
+        "LPI",
+        "TLPR",
+        "BHEL",
+        "RCPT"
+      ]
+    },
+    "LPI-FM": {
+      "line_name": "LPI-FM",
+      "color": "#8B5A2B",
+      "frequency_mins": 45,
+      "is_premium": false,
+      "stops": [
+        "LPI",
+        "CDNR",
+        "HFZ",
+        "HTCY",
+        "BRBD",
+        "BTNR",
+        "FNB",
+        "NCHS",
+        "BMT",
+        "SJVP",
+        "JET",
+        "SC",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "FM-SC": {
+      "line_name": "FM-SC",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "FM",
+        "HPG",
+        "YKA",
+        "DQR",
+        "MXT",
+        "KCG",
+        "VAR",
+        "JOO",
+        "ATC",
+        "STPD",
+        "SC"
+      ]
+    },
+    "SC-FM": {
+      "line_name": "SC-FM",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "SC",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "LPI-SC": {
+      "line_name": "LPI-SC",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "LPI",
+        "CDNR",
+        "HFZ",
+        "HTCY",
+        "BRBD",
+        "BTNR",
+        "FNB",
+        "NCHS",
+        "BMT",
+        "SJVP",
+        "JET",
+        "SC",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "SC-HYB": {
+      "line_name": "SC-HYB",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "SC",
+        "JET",
+        "SJVP",
+        "NLRD",
+        "KQD",
+        "LKPL",
+        "HYB"
+      ]
+    },
+    "FM-HYB": {
+      "line_name": "FM-HYB",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "FM",
+        "HPG",
+        "YKA",
+        "DQR",
+        "MXT",
+        "KCG",
+        "VAR",
+        "JOO",
+        "ATC",
+        "STPD",
+        "SC",
+        "JET",
+        "SJVP",
+        "NLRD",
+        "KQD",
+        "LKPL",
+        "HYB"
+      ]
+    },
+    "HYB-FM": {
+      "line_name": "HYB-FM",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "HYB",
+        "LKPL",
+        "KQD",
+        "NLRD",
+        "SJVP",
+        "JET",
+        "SC",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "BHONGIR-FM MEMU": {
+      "line_name": "BHONGIR-FM MEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "BG",
+        "BN",
+        "GT",
+        "CHZ",
+        "MJF",
+        "LGDH",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "FM-JANGAON  MEMU TRAIN": {
+      "line_name": "FM-JANGAON  MEMU TRAIN",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "FM",
+        "HPG",
+        "YKA",
+        "DQR",
+        "MXT",
+        "KCG",
+        "VAR",
+        "JOO",
+        "ATC",
+        "STPD",
+        "LGDH",
+        "MJF",
+        "CHZ",
+        "GT",
+        "BN",
+        "BG",
+        "RAG",
+        "WP",
+        "ALER",
+        "PBP",
+        "ZN"
+      ]
+    },
+    "JANGOAN-FM MEMU TRAIN": {
+      "line_name": "JANGOAN-FM MEMU TRAIN",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "ZN",
+        "PBP",
+        "ALER",
+        "WP",
+        "RAG",
+        "BG",
+        "BN",
+        "GT",
+        "CHZ",
+        "MJF",
+        "LGDH",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "BMO-FM DEMU": {
+      "line_name": "BMO-FM DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "BMO",
+        "BOZ",
+        "ALW",
+        "CVB",
+        "AMQ",
+        "RKO",
+        "SFX",
+        "DYE",
+        "MJF",
+        "LGDH",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "SC-UR DEMU": {
+      "line_name": "SC-UR DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "SC",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM",
+        "NSVP",
+        "BDVL",
+        "UR"
+      ]
+    },
+    "FM-UR DEMU": {
+      "line_name": "FM-UR DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "FM",
+        "NSVP",
+        "BDVL",
+        "UR"
+      ]
+    },
+    "UR-FM DEMU": {
+      "line_name": "UR-FM DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "UR",
+        "BDVL",
+        "NSVP",
+        "FM"
+      ]
+    },
+    "UR-SC DEMU": {
+      "line_name": "UR-SC DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "UR",
+        "BDVL",
+        "NSVP",
+        "FM",
+        "HPG",
+        "YKA",
+        "DQR",
+        "MXT",
+        "KCG",
+        "VAR",
+        "JOO",
+        "ATC",
+        "STPD",
+        "SC"
+      ]
+    },
+    "MED-FM DEMU": {
+      "line_name": "MED-FM DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "MED",
+        "GWV",
+        "GDPL",
+        "BMO",
+        "BOZ",
+        "ALW",
+        "CVB",
+        "AMQ",
+        "RKO",
+        "SFX",
+        "DYE",
+        "MJF",
+        "LGDH",
+        "STPD",
+        "ATC",
+        "JOO",
+        "VAR",
+        "KCG",
+        "MXT",
+        "DQR",
+        "YKA",
+        "HPG",
+        "FM"
+      ]
+    },
+    "FM-MED DEMU": {
+      "line_name": "FM-MED DEMU",
+      "color": "#8B5A2B",
+      "frequency_mins": 60,
+      "is_premium": false,
+      "stops": [
+        "FM",
+        "HPG",
+        "YKA",
+        "DQR",
+        "MXT",
+        "KCG",
+        "VAR",
+        "JOO",
+        "ATC",
+        "STPD",
+        "LGDH",
+        "MJF",
+        "DYE",
+        "SFX",
+        "RKO",
+        "AMQ",
+        "CVB",
+        "ALW",
+        "BOZ",
+        "BMO",
+        "GDPL",
+        "GWV",
+        "MED"
+      ]
+    }
+  }
+}
