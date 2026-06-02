@@ -39,7 +39,7 @@ Builds:
     versionCode: 1
     # UPDATE THIS: replace with the exact commit hash after you push to GitHub
     # Run: git rev-parse HEAD
-    commit: TO_BE_REPLACED_WITH_COMMIT_HASH
+    commit: 41cf2185c403328521dd9d0efa38364145dd351c
     subdir: frontend/android
     gradle:
       - release
