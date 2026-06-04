@@ -41,12 +41,46 @@ function routeColor(routeId) {
 }
 
 // ── Frequency estimation ──────────────────────────────────────────────────────
-// Counts one-direction trips only (direction_id = 0, or half of total).
-// Assumes 16 operating hours (960 min) per day.
 
+function parseTimeMins(hms) {
+  // Parses "HH:MM:SS" (GTFS allows hours >23 for after-midnight services)
+  const p = hms.split(':')
+  return parseInt(p[0], 10) * 60 + parseInt(p[1], 10)
+}
+
+// Primary: compute real headway from direction_id=0 departure times.
+// Returns frequency bucket (5/10/15/20/30/45) or null if insufficient data.
+function freqFromTimes(tripIds, tripDirection, tripFirstTime) {
+  const times = tripIds
+    .filter(id => tripDirection[id] === 0)
+    .map(id => tripFirstTime[id])
+    .filter(t => t !== undefined && t >= 300 && t <= 1380)  // 5am–11pm
+    .sort((a, b) => a - b)
+
+  if (times.length < 2) return null
+
+  const gaps = []
+  for (let i = 1; i < times.length; i++) {
+    const g = times[i] - times[i - 1]
+    if (g >= 2 && g <= 90) gaps.push(g)   // ignore gaps < 2 min or > 90 min
+  }
+  if (!gaps.length) return null
+
+  gaps.sort((a, b) => a - b)
+  const median = gaps[Math.floor(gaps.length / 2)]
+
+  if (median <= 5)  return 5
+  if (median <= 10) return 10
+  if (median <= 15) return 15
+  if (median <= 20) return 20
+  if (median <= 30) return 30
+  return 45
+}
+
+// Fallback: estimate from total trip count when time data is missing.
 function estimateFrequency(tripCount) {
   if (tripCount <= 0) return 30
-  const oneDir = Math.ceil(tripCount / 2)          // rough one-direction count
+  const oneDir = Math.ceil(tripCount / 2)
   const freq   = Math.round(960 / oneDir)
   if (freq <= 5)  return 5
   if (freq <= 10) return 10
@@ -112,13 +146,15 @@ async function main() {
 
   // ── Step 3: Trips ──────────────────────────────────────────────────────────
   console.log('[3/4] Parsing trips.txt …')
-  const tripToRoute = {}   // trip_id  → route_id
-  const routeTrips  = {}   // route_id → [trip_id, …]
+  const tripToRoute  = {}   // trip_id  → route_id
+  const tripDirection = {}  // trip_id  → direction_id (0=outbound, 1=inbound)
+  const routeTrips   = {}   // route_id → [trip_id, …]
   let totalTrips = 0
 
   await streamCsv('trips.txt', row => {
     if (!row.trip_id || !row.route_id) return
-    tripToRoute[row.trip_id] = row.route_id
+    tripToRoute[row.trip_id]   = row.route_id
+    tripDirection[row.trip_id] = parseInt(row.direction_id, 10) || 0
     if (!routeTrips[row.route_id]) routeTrips[row.route_id] = []
     routeTrips[row.route_id].push(row.trip_id)
     totalTrips++
@@ -133,6 +169,7 @@ async function main() {
   // Track: for each route_id, the trip with the most stops seen so far.
   const routeBestTrip   = {}   // route_id → { tripId, stopIds[] }
   const currentTripBuf  = {}   // trip_id  → [stop entries being accumulated]
+  const tripFirstTime   = {}   // trip_id  → departure_time at first stop (minutes)
 
   // Since stop_times.txt is sorted by trip_id (sequential), we flush each trip
   // when we encounter a new trip_id, keeping only the longest per route.
@@ -157,7 +194,7 @@ async function main() {
   }
 
   await streamCsv('stop_times.txt', row => {
-    const { trip_id, stop_sequence, stop_id } = row
+    const { trip_id, stop_sequence, stop_id, departure_time } = row
     if (!trip_id || !stop_id) return
     totalStopTimes++
 
@@ -171,7 +208,13 @@ async function main() {
     }
 
     if (!currentTripBuf[trip_id]) currentTripBuf[trip_id] = []
-    currentTripBuf[trip_id].push({ seq: parseInt(stop_sequence, 10) || 0, stop_id })
+    const seq = parseInt(stop_sequence, 10) || 0
+    currentTripBuf[trip_id].push({ seq, stop_id })
+
+    // Capture first-stop departure time for frequency calculation
+    if (seq === 1 && departure_time && !tripFirstTime[trip_id]) {
+      tripFirstTime[trip_id] = parseTimeMins(departure_time)
+    }
   })
 
   // Flush the final trip
@@ -197,12 +240,15 @@ async function main() {
       if (!outStops[sid]) outStops[sid] = stopsById[sid]
     }
 
-    const tripCount = (routeTrips[routeId] || []).length
+    const tripIds   = routeTrips[routeId] || []
+    const tripCount = tripIds.length
+    const frequency_mins = freqFromTimes(tripIds, tripDirection, tripFirstTime)
+                        || estimateFrequency(tripCount)
 
     outRoutes[routeId] = {
       line_name:      meta.line_name,
       color:          routeColor(routeId),
-      frequency_mins: estimateFrequency(tripCount),
+      frequency_mins,
       is_premium:     false,
       stops:          best.stopIds,
     }

@@ -45,7 +45,7 @@ export function Navbar() {
           <span className="navbar__name">
             Travel<span className="navbar__name-accent">Mate</span>
           </span>
-          <span className="navbar__beta-badge" aria-label="Beta version">Beta</span>
+          <span className="navbar__beta-badge" aria-label="Beta version">BETA</span>
           <span className="navbar__city-badge">Hyderabad</span>
         </div>
       </div>

@@ -35,15 +35,27 @@ function routeFreq(route) {
   return freqs.length ? Math.min(...freqs) : 999
 }
 
-/* All bus routes from raw data, sorted: most frequent first, then fastest
+/* All bus routes from raw data, sorted by commuter_score (routing engine's ranking),
+   then by duration as tiebreaker.
    The router returns bus routes under the key "rtc" (not "bus") */
 function getAllBusRoutes(rawRoutes) {
   const buses = rawRoutes?.rtc?.all || []
-  return [...buses].sort((a, b) => {
-    const fd = routeFreq(a) - routeFreq(b)
-    if (fd !== 0) return fd
+  console.log('[TM-DEBUG RouteResults.jsx] getAllBusRoutes INPUT (rtc.all):')
+  buses.forEach((r, i) => {
+    const name = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.line_name ?? '?'
+    console.log(`  input[${i}] "${name}" commuter_score=${r.commuter_score} routeFreq=${routeFreq(r)}min`)
+  })
+  const sorted = [...buses].sort((a, b) => {
+    const sd = (b.commuter_score ?? 0) - (a.commuter_score ?? 0)
+    if (sd !== 0) return sd
     return a.total_duration_sec - b.total_duration_sec
   })
+  console.log('[TM-DEBUG RouteResults.jsx] getAllBusRoutes OUTPUT (sorted by commuter_score):')
+  sorted.forEach((r, i) => {
+    const name = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.line_name ?? '?'
+    console.log(`  output[${i}] "${name}" commuter_score=${r.commuter_score}`)
+  })
+  return sorted
 }
 
 /* Single best route for metro / mmts from strategies */

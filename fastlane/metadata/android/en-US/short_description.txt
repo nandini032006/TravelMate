@@ -1,1 +1,1 @@
-Hyderabad smart transit planner — Bus, Metro, MMTS with live conditions
+Multimodal transit planner for Hyderabad — Metro, MMTS, Bus, offline routing

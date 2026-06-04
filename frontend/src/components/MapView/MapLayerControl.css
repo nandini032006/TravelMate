@@ -5,14 +5,14 @@
   z-index: 500;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  background: rgba(255,255,255,0.92) !important;
+  gap: 3px;
+  background: rgba(255,255,255,0.94) !important;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 8px 8px;
-  box-shadow: 0 4px 16px rgba(15,23,42,0.10);
+  border-radius: 14px;
+  padding: 10px 8px;
+  box-shadow: 0 4px 20px rgba(15,23,42,0.12);
   backdrop-filter: blur(12px);
-  min-width: 88px;
+  min-width: 96px;
 }
 
 .map-layer-control__title {
@@ -27,6 +27,46 @@
   margin-bottom: 2px;
 }
 
+/* ── Base tile buttons ────────────────────────────────────────────────────── */
+.map-tile-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.map-tile-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  width: 100%;
+  text-align: left;
+}
+
+.map-tile-btn:hover {
+  background: var(--panel-alt);
+  color: var(--text-muted);
+}
+
+.map-tile-btn.--on {
+  background: rgba(22,163,74,0.10);
+  color: #15803d;
+  border-color: rgba(22,163,74,0.28);
+  font-weight: 700;
+}
+
+/* ── Overlay toggle buttons ───────────────────────────────────────────────── */
 .map-layer-btn {
   display: flex;
   align-items: center;
@@ -40,13 +80,15 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
   white-space: nowrap;
 }
+
 .map-layer-btn:hover {
   background: var(--panel-alt);
   color: var(--text-muted);
 }
+
 .map-layer-btn.--on {
   background: var(--panel-alt);
   color: var(--text);
@@ -55,6 +97,6 @@
 }
 
 @media (max-width: 480px) {
-  .map-layer-control { bottom: 16px; right: 8px; padding: 6px; min-width: 76px; }
-  .map-layer-btn { font-size: 10px; padding: 4px 6px; }
+  .map-layer-control { bottom: 16px; right: 8px; padding: 8px 6px; min-width: 82px; }
+  .map-layer-btn, .map-tile-btn { font-size: 10px; padding: 4px 6px; }
 }

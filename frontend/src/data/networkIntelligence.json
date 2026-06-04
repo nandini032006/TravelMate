@@ -1,0 +1,289 @@
+{
+  "hubs": [
+    {
+      "id": "mgbs",
+      "name": "MGBS",
+      "lat": 17.3769,
+      "lon": 78.4793,
+      "tier": 1,
+      "modes": ["metro", "bus"],
+      "hubScore": 100,
+      "transferRadius": 700,
+      "description": "Mahatma Gandhi Bus Station — largest TSRTC terminus"
+    },
+    {
+      "id": "secunderabad",
+      "name": "Secunderabad",
+      "lat": 17.4345,
+      "lon": 78.5048,
+      "tier": 1,
+      "modes": ["mmts", "bus", "metro"],
+      "hubScore": 98,
+      "transferRadius": 700,
+      "description": "Secunderabad railway + MMTS + major bus interchange"
+    },
+    {
+      "id": "ameerpet",
+      "name": "Ameerpet",
+      "lat": 17.4374,
+      "lon": 78.4487,
+      "tier": 1,
+      "modes": ["metro", "bus"],
+      "hubScore": 95,
+      "transferRadius": 600,
+      "description": "Metro Blue+Red+Green interchange — busiest metro hub"
+    },
+    {
+      "id": "koti",
+      "name": "Koti",
+      "lat": 17.3831,
+      "lon": 78.4828,
+      "tier": 2,
+      "modes": ["bus"],
+      "hubScore": 88,
+      "transferRadius": 600,
+      "description": "Major RTC bus interchange in old city"
+    },
+    {
+      "id": "nampally",
+      "name": "Nampally",
+      "lat": 17.3906,
+      "lon": 78.4718,
+      "tier": 2,
+      "modes": ["mmts", "bus", "metro"],
+      "hubScore": 86,
+      "transferRadius": 600,
+      "description": "Nampally railway + metro + bus hub"
+    },
+    {
+      "id": "mehdipatnam",
+      "name": "Mehdipatnam",
+      "lat": 17.3947,
+      "lon": 78.4401,
+      "tier": 2,
+      "modes": ["bus"],
+      "hubScore": 85,
+      "transferRadius": 600,
+      "description": "Major western bus interchange"
+    },
+    {
+      "id": "raidurg",
+      "name": "Raidurg / Hitech City",
+      "lat": 17.4348,
+      "lon": 78.3758,
+      "tier": 2,
+      "modes": ["metro", "bus"],
+      "hubScore": 83,
+      "transferRadius": 600,
+      "description": "IT corridor metro terminus + bus interchange"
+    },
+    {
+      "id": "lingampally",
+      "name": "Lingampally",
+      "lat": 17.4948,
+      "lon": 78.3168,
+      "tier": 2,
+      "modes": ["mmts", "bus", "metro"],
+      "hubScore": 82,
+      "transferRadius": 600,
+      "description": "Western terminus — metro + MMTS + bus"
+    },
+    {
+      "id": "miyapur",
+      "name": "Miyapur",
+      "lat": 17.4972,
+      "lon": 78.3490,
+      "tier": 2,
+      "modes": ["metro", "bus"],
+      "hubScore": 80,
+      "transferRadius": 550,
+      "description": "Metro Blue Line terminus — major NW hub"
+    },
+    {
+      "id": "kukatpally",
+      "name": "Kukatpally",
+      "lat": 17.4843,
+      "lon": 78.3949,
+      "tier": 2,
+      "modes": ["metro", "bus"],
+      "hubScore": 78,
+      "transferRadius": 550,
+      "description": "Kukatpally metro + JNTU bus interchange"
+    },
+    {
+      "id": "lb_nagar",
+      "name": "LB Nagar",
+      "lat": 17.3467,
+      "lon": 78.5537,
+      "tier": 2,
+      "modes": ["metro", "bus"],
+      "hubScore": 78,
+      "transferRadius": 550,
+      "description": "Metro Blue Line SE terminus + bus hub"
+    },
+    {
+      "id": "kachiguda",
+      "name": "Kachiguda",
+      "lat": 17.3907,
+      "lon": 78.4894,
+      "tier": 2,
+      "modes": ["mmts", "bus"],
+      "hubScore": 76,
+      "transferRadius": 550,
+      "description": "Kachiguda railway + MMTS + bus interchange"
+    },
+    {
+      "id": "dilsukhnagar",
+      "name": "Dilsukhnagar",
+      "lat": 17.3680,
+      "lon": 78.5280,
+      "tier": 2,
+      "modes": ["metro", "bus"],
+      "hubScore": 74,
+      "transferRadius": 500,
+      "description": "SE metro station + major bus interchange"
+    },
+    {
+      "id": "jntu",
+      "name": "JNTU / Kukatpally Housing Board",
+      "lat": 17.4941,
+      "lon": 78.3930,
+      "tier": 3,
+      "modes": ["bus"],
+      "hubScore": 70,
+      "transferRadius": 500,
+      "description": "Major NW bus interchange near university"
+    },
+    {
+      "id": "rtc_crossroads",
+      "name": "RTC Crossroads",
+      "lat": 17.4085,
+      "lon": 78.4976,
+      "tier": 3,
+      "modes": ["bus"],
+      "hubScore": 72,
+      "transferRadius": 500,
+      "description": "Central RTC crossroads interchange"
+    },
+    {
+      "id": "lakdikapul",
+      "name": "Lakdi Ka Pul",
+      "lat": 17.4092,
+      "lon": 78.4598,
+      "tier": 3,
+      "modes": ["metro", "bus"],
+      "hubScore": 68,
+      "transferRadius": 500,
+      "description": "Metro + bus interchange — central corridor"
+    },
+    {
+      "id": "uppal",
+      "name": "Uppal",
+      "lat": 17.4010,
+      "lon": 78.5592,
+      "tier": 3,
+      "modes": ["metro", "bus"],
+      "hubScore": 68,
+      "transferRadius": 500,
+      "description": "Metro Green Line + eastern bus hub"
+    },
+    {
+      "id": "nagole",
+      "name": "Nagole",
+      "lat": 17.3740,
+      "lon": 78.5533,
+      "tier": 3,
+      "modes": ["metro", "bus"],
+      "hubScore": 65,
+      "transferRadius": 500,
+      "description": "Metro Green Line SE terminus"
+    },
+    {
+      "id": "charminar",
+      "name": "Charminar",
+      "lat": 17.3616,
+      "lon": 78.4747,
+      "tier": 3,
+      "modes": ["bus"],
+      "hubScore": 70,
+      "transferRadius": 500,
+      "description": "Major old city bus interchange"
+    },
+    {
+      "id": "paradise",
+      "name": "Paradise / Secunderabad West",
+      "lat": 17.4399,
+      "lon": 78.4983,
+      "tier": 3,
+      "modes": ["metro", "bus"],
+      "hubScore": 68,
+      "transferRadius": 500,
+      "description": "Secunderabad West metro + bus hub"
+    },
+    {
+      "id": "begumpet",
+      "name": "Begumpet",
+      "lat": 17.4434,
+      "lon": 78.4685,
+      "tier": 3,
+      "modes": ["metro", "bus"],
+      "hubScore": 66,
+      "transferRadius": 450,
+      "description": "Metro Red Line + bus interchange"
+    },
+    {
+      "id": "punjagutta",
+      "name": "Punjagutta",
+      "lat": 17.4322,
+      "lon": 78.4453,
+      "tier": 3,
+      "modes": ["metro", "bus"],
+      "hubScore": 65,
+      "transferRadius": 450,
+      "description": "Metro Blue Line + commercial bus hub"
+    },
+    {
+      "id": "gachibowli",
+      "name": "Gachibowli",
+      "lat": 17.4396,
+      "lon": 78.3635,
+      "tier": 3,
+      "modes": ["bus"],
+      "hubScore": 68,
+      "transferRadius": 500,
+      "description": "IT hub + major bus interchange"
+    },
+    {
+      "id": "kondapur",
+      "name": "Kondapur",
+      "lat": 17.4640,
+      "lon": 78.3670,
+      "tier": 3,
+      "modes": ["bus"],
+      "hubScore": 62,
+      "transferRadius": 450,
+      "description": "IT corridor bus hub"
+    },
+    {
+      "id": "hafeezpet",
+      "name": "Hafeezpet",
+      "lat": 17.4783,
+      "lon": 78.3617,
+      "tier": 3,
+      "modes": ["bus"],
+      "hubScore": 58,
+      "transferRadius": 400,
+      "description": "NW bus interchange"
+    }
+  ],
+  "trunkCorridors": [
+    "219", "300", "8A", "10H", "290U", "49M", "218C", "555", "299X",
+    "113M", "9Y/F", "16A", "222A", "281", "90L", "219S/502", "1Z",
+    "72H", "10Y/F", "2J", "284P", "505", "9F", "300L",
+    "216", "5K", "10K/J", "217", "218", "277", "47L", "71A", "95K",
+    "1", "40", "115", "117"
+  ],
+  "distanceThresholdLongJourney": 10000,
+  "hubTransferRadius": 700,
+  "corridorFirstEnabled": true
+}

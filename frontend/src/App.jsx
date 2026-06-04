@@ -90,8 +90,18 @@ function PlannerPage() {
 
   const { strategies, comparison } = useMemo(() => {
     if (!routes) return { strategies: null, comparison: null }
+    console.log('[TM-DEBUG App.jsx] routes.rtc.all entering generateStrategies():')
+    routes?.rtc?.all?.forEach((r, i) => {
+      const name = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.line_name ?? '?'
+      console.log(`  routes.rtc.all[${i}] "${name}" score=${r.commuter_score}`)
+    })
     const comparison = buildComparison(routes, traffic)
     const strategies = generateStrategies(routes)
+    console.log('[TM-DEBUG App.jsx] local_commuter strategy top routes:')
+    strategies?.find(s => s.id === 'local_commuter')?.routes?.forEach((r, i) => {
+      const name = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.line_name ?? '?'
+      console.log(`  local_commuter[${i}] "${name}" strategy_score=${r.strategy_score} commuter_score=${r.commuter_score}`)
+    })
     return { strategies, comparison }
   }, [routes, traffic])
 

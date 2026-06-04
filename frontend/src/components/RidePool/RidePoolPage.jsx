@@ -85,6 +85,7 @@ export function RidePoolPage() {
   const [showOffer,  setShowOffer]  = useState(false)
   const [offered,    setOffered]    = useState(getOffered)
   const [wallet,     setWallet]     = useState(() => getWallet())
+  const [showMap,    setShowMap]    = useState(false)
 
   const refreshWallet = useCallback(() => setWallet(getWallet()), [])
 
@@ -94,6 +95,9 @@ export function RidePoolPage() {
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)
   }, [])
+
+  // Hide map when locations change so user sees fresh "View Route on Map" button
+  useEffect(() => { setShowMap(false) }, [src, dst])
 
   const handleSearch = useCallback(() => {
     if (!src?.lat || !dst?.lat) return
@@ -176,6 +180,17 @@ export function RidePoolPage() {
                   ? <><span className="rp__loading-spinner" style={{ width:15, height:15, borderWidth:2 }} /> Matching…</>
                   : <>🔍 Find Pool Rides</>}
               </button>
+
+              {src && dst && !showMap && (
+                <button className="rp__view-map-btn" onClick={() => setShowMap(true)}>
+                  🗺️ View Route on Map
+                </button>
+              )}
+              {src && dst && showMap && (
+                <button className="rp__view-map-btn rp__view-map-btn--active" onClick={() => setShowMap(false)}>
+                  ✕ Hide Map
+                </button>
+              )}
             </div>
 
             {/* Results */}
@@ -248,8 +263,8 @@ export function RidePoolPage() {
         )}
       </aside>
 
-      {/* ── Map ── */}
-      <RidePoolMap from={src} to={dst} selectedMatch={selected} />
+      {/* ── Map — only shown after user clicks "View Route on Map" ── */}
+      {showMap && <RidePoolMap from={src} to={dst} selectedMatch={selected} />}
 
       {/* ── Insights ── */}
       <RidePoolInsights matches={matches} selectedMatch={selected} wallet={wallet} />

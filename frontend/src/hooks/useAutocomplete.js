@@ -21,26 +21,35 @@ export function useAutocomplete() {
           searchPhoton(query),
         ])
 
-        const seenCoords = new Set()
-        const seenNames  = new Set()
-        const merged     = []
+        const seenCoords   = new Set()
+        const seenNames    = new Set()
+        const seenPrefixes = new Set()   // first 9 chars — catches "Lingampalli" vs "Lingampally"
+        const merged       = []
+
+        function _namePrefix(label) {
+          const n = label.toLowerCase().trim()
+          return n.slice(0, Math.min(n.length, 9))
+        }
 
         // Transit stops take priority
         for (const item of stopResults) {
           seenCoords.add(`${item.lat.toFixed(4)},${item.lon.toFixed(4)}`)
           seenNames.add(item.label.toLowerCase().trim())
+          seenPrefixes.add(_namePrefix(item.label))
           merged.push(item)
           if (merged.length >= 8) break
         }
 
-        // Photon results fill remaining slots — skip if name or coords already seen
+        // Photon results fill remaining slots — skip if name, prefix, or coords already seen
         for (const item of photonResults) {
           if (merged.length >= 8) break
-          const coordKey = `${item.lat.toFixed(4)},${item.lon.toFixed(4)}`
-          const nameKey  = item.label.toLowerCase().trim()
-          if (seenCoords.has(coordKey) || seenNames.has(nameKey)) continue
+          const coordKey  = `${item.lat.toFixed(4)},${item.lon.toFixed(4)}`
+          const nameKey   = item.label.toLowerCase().trim()
+          const prefixKey = _namePrefix(item.label)
+          if (seenCoords.has(coordKey) || seenNames.has(nameKey) || seenPrefixes.has(prefixKey)) continue
           seenCoords.add(coordKey)
           seenNames.add(nameKey)
+          seenPrefixes.add(prefixKey)
           merged.push({ ...item, modes: [] })
         }
 

@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import L from 'leaflet'
 import { getMetroShapes, getMmtsShapes } from '../../services/transitData'
 import { getMeta } from '../../utils/modeColors'
 import { useLang } from '../../contexts/LanguageContext'
+import { fetchOsrmRoute, sampleWaypoints } from '../../utils/osrm'
 import { translateStopName } from '../../translations/stationNames'
 import { MapLayerControl } from './MapLayerControl'
 import 'leaflet/dist/leaflet.css'
@@ -18,16 +19,41 @@ L.Icon.Default.mergeOptions({
 const HYD_CENTER = [17.385, 78.4867]
 const HYD_ZOOM   = 12
 
+const TILE_URLS = {
+  standard: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    options: { subdomains: 'abcd', maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>' },
+  },
+  satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    options: { maxZoom: 18, attribution: 'Tiles &copy; Esri' },
+  },
+  transit: {
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    options: { subdomains: 'abcd', maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>' },
+  },
+}
+
 function _isTransit(mode) { return mode !== 'walk' && mode !== 'auto' }
 
 export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, riskZones = [], traffic = null, aqi = null, fullscreen = false }) {
   const containerRef  = useRef(null)
   const mapRef        = useRef(null)
-  const layersRef     = useRef({ src: null, dst: null, route: null, hoverRoute: null, metro: null, mmts: null, riskZones: null })
+  const layersRef     = useRef({ src: null, dst: null, route: null, hoverRoute: null, metro: null, mmts: null, riskZones: null, baseTile: null })
   const onMapClickRef = useRef(onMapClick)
   const prevSrcRef    = useRef(null)
   const prevDstRef    = useRef(null)
   const [mapLayers, setMapLayers] = useState({ metro: true, mmts: false })
+  const [baseTile, setBaseTile]   = useState(() => {
+    try { return sessionStorage.getItem('tm_maptile') || 'standard' } catch { return 'standard' }
+  })
+  // OSRM road geometry per step index; null = not yet fetched (use stop-coord fallback)
+  const [routeGeoms, setRouteGeoms] = useState(null)
+
+  const handleBaseTileChange = useCallback((key) => {
+    setBaseTile(key)
+    try { sessionStorage.setItem('tm_maptile', key) } catch {}
+  }, [])
   useEffect(() => { onMapClickRef.current = onMapClick }, [onMapClick])
   const { t, lang } = useLang()
 
@@ -35,11 +61,7 @@ export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, ris
   useEffect(() => {
     if (mapRef.current) return
     const map = L.map(containerRef.current, { center: HYD_CENTER, zoom: HYD_ZOOM })
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19,
-    }).addTo(map)
+    // Tile layer added by the baseTile effect below
     map.on('click', (e) => onMapClickRef.current?.(e.latlng.lat, e.latlng.lng))
     mapRef.current = map
 
@@ -52,6 +74,18 @@ export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, ris
 
     return () => { map.remove(); mapRef.current = null }
   }, []) // eslint-disable-line
+
+  // ── Base tile layer swap ─────────────────────────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    const old = layersRef.current.baseTile
+    if (old) old.remove()
+    const cfg   = TILE_URLS[baseTile] || TILE_URLS.standard
+    const layer = L.tileLayer(cfg.url, cfg.options)
+    layer.addTo(map)
+    layersRef.current.baseTile = layer
+  }, [baseTile])
 
   // ── Invalidate size when fullscreen toggles ──────────────────────────────
   useEffect(() => {
@@ -110,6 +144,30 @@ export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, ris
     }
   }, [dst, lang, t])
 
+  // ── Fetch OSRM road geometry for bus/auto steps ─────────────────────────
+  useEffect(() => {
+    setRouteGeoms(null)
+    if (!selectedRoute) return
+    let cancelled = false
+
+    Promise.all(
+      (selectedRoute.steps || []).map(async (step, i) => {
+        if (step.mode === 'metro' || step.mode === 'mmts' || step.mode === 'walk') return { i, geom: null }
+        const pts = _stepCoords(step)
+        if (pts.length < 2) return { i, geom: null }
+        const geom = await fetchOsrmRoute(sampleWaypoints(pts, 8))
+        return { i, geom }
+      })
+    ).then(results => {
+      if (cancelled) return
+      const map = {}
+      for (const { i, geom } of results) if (geom) map[i] = geom
+      setRouteGeoms(map)
+    })
+
+    return () => { cancelled = true }
+  }, [selectedRoute])
+
   // ── Route polylines ──────────────────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current
@@ -134,9 +192,10 @@ export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, ris
       : tRatio < 0.80 ? 0.14
       : 0
 
-    for (const step of steps) {
+    for (const [stepIdx, step] of steps.entries()) {
       const meta   = getMeta(step.mode)
-      const coords = _stepCoords(step)
+      // Use OSRM road geometry if available, otherwise fall back to stop-sequence coords
+      const coords = routeGeoms?.[stepIdx] || _stepCoords(step)
       if (coords.length < 2) continue
 
       const isTransitStep = _isTransit(step.mode)
@@ -214,7 +273,7 @@ export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, ris
     if (allCoords.length > 1) {
       map.fitBounds(L.latLngBounds(allCoords), { padding: [60, 60], maxZoom: 16 })
     }
-  }, [selectedRoute, traffic, lang, t])
+  }, [selectedRoute, traffic, lang, t, routeGeoms])
 
   // ── Risk zone circles ────────────────────────────────────────────────────
   useEffect(() => {
@@ -305,7 +364,12 @@ export function MapView({ src, dst, selectedRoute, hoveredRoute, onMapClick, ris
         aria-label="Interactive map of Hyderabad transit routes. Use Search to plan a journey."
         tabIndex={0}
       />
-      <MapLayerControl layers={mapLayers} onChange={setMapLayers} />
+      <MapLayerControl
+        layers={mapLayers}
+        onChange={setMapLayers}
+        baseTile={baseTile}
+        onBaseTileChange={handleBaseTileChange}
+      />
       {aqiBadge && (
         <div className="map-aqi-badge" style={{ background: aqiBadge.bg, borderColor: aqiBadge.color }} aria-label={`Air quality: AQI ${aqi.value}`}>
           <span className="map-aqi-badge__icon">🌬</span>

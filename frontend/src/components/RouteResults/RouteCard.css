@@ -497,14 +497,17 @@
 .rc__map-wrap {
   margin-top: 8px;
   border-radius: var(--radius);
-  overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
+  overflow: visible;
+  position: relative;
 }
 
 .rc__inline-map {
   width: 100%;
   height: 240px;
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 .rc__map-nocoords {

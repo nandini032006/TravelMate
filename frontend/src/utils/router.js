@@ -17,16 +17,22 @@ import {
   getRoutesForStop,
   getFares,
 } from '../services/transitData'
+import networkIntelligence from '../data/networkIntelligence.json'
+
+// ── Network intelligence constants ────────────────────────────────────────────
+const HUBS          = networkIntelligence.hubs
+const TRUNK_ROUTES  = new Set(networkIntelligence.trunkCorridors)
+const LONG_JOURNEY_M = networkIntelligence.distanceThresholdLongJourney  // 10 000 m
 
 // ── Mode-specific search radii (metres) ───────────────────────────────────────
 const NEARBY_RADIUS = {
-  bus:   1000,
+  bus:   2000,   // wide enough to handle Photon geocoder coordinate variance (~1.5km off for named areas)
   mmts:  1500,
   metro: 2000,
 }
 
 const TRANSFER_RADIUS = {
-  bus:   200,
+  bus:   400,    // was 200 — Hyderabad interchanges (MGBS, Kachiguda, Mehdipatnam) have stops 300-500m apart
   mmts:  300,
   metro: 500,
 }
@@ -53,6 +59,62 @@ function haversine(lat1, lon1, lat2, lon2) {
   const Δλ = ((lon2 - lon1) * Math.PI) / 180
   const a  = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+// ── Hub intelligence helpers ──────────────────────────────────────────────────
+
+// Distance-weighted hub significance at a given coordinate.
+// Returns 0 if no hub within maxDistM; up to hubScore at centre.
+function getNearestHubScore(lat, lon, maxDistM = 800) {
+  let best = 0
+  for (const hub of HUBS) {
+    const d = haversine(lat, lon, hub.lat, hub.lon)
+    if (d <= maxDistM) {
+      // Linear weight: 1.0 at 0m → 0.5 at maxDistM
+      const weighted = hub.hubScore * (1 - (d / maxDistM) * 0.5)
+      if (weighted > best) best = weighted
+    }
+  }
+  return best
+}
+
+// Bonus points for a route whose endpoints pass through/near major hubs.
+// Tier-1 hub (MGBS/Secunderabad/Ameerpet) → +6; tier-2 → +3; tier-3 → +1.
+function computeHubPassageBonus(route) {
+  let bonus = 0
+  for (const step of route.steps) {
+    if (step.mode === 'walk' || step.mode === 'auto') continue
+    for (const hub of HUBS) {
+      const dFrom = haversine(step.from_coord.lat, step.from_coord.lon, hub.lat, hub.lon)
+      const dTo   = haversine(step.to_coord.lat,   step.to_coord.lon,   hub.lat, hub.lon)
+      if (dFrom <= hub.transferRadius || dTo <= hub.transferRadius) {
+        const b = hub.tier === 1 ? 6 : hub.tier === 2 ? 3 : 1
+        if (b > bonus) bonus = b
+      }
+    }
+    if (bonus >= 6) break   // tier-1 already found — can't do better
+  }
+  return Math.min(bonus, 10)
+}
+
+// True if a line name is (or is a lettered variant of) a trunk corridor.
+// "216K/L" → matches trunk "216" because next char after prefix is a letter.
+// "10H" → matches trunk "10H" exactly; does NOT false-match trunk "1" because
+// next char after "1" is "0" (digit), not a letter.
+function isTrunkLineName(name) {
+  if (TRUNK_ROUTES.has(name)) return true
+  for (const trunk of TRUNK_ROUTES) {
+    if (name.length > trunk.length &&
+        name.startsWith(trunk) &&
+        /[A-Za-z/]/.test(name[trunk.length])) return true
+  }
+  return false
+}
+
+// True if this route_id maps to one of the high-frequency trunk corridors.
+function isTrunkRoute(routeId) {
+  const route = getRoute(routeId)
+  return route ? isTrunkLineName(route.line_name) : false
 }
 
 // ── Time / cost helpers ───────────────────────────────────────────────────────
@@ -103,7 +165,7 @@ function getNearbyStops(lat, lon, maxDist, mode) {
     if (d <= maxDist) result.push({ stop, dist: d })
   }
   result.sort((a, b) => a.dist - b.dist)
-  return result.slice(0, 20)
+  return result.slice(0, 30)   // was 20 — denser areas need more coverage
 }
 
 // ── Step builders ─────────────────────────────────────────────────────────────
@@ -234,6 +296,10 @@ function resolveDirection(route, boardStopId, alightStopId, mode) {
 }
 
 // ── Route-map builders ────────────────────────────────────────────────────────
+
+// For board stop: prefer the NEAREST stop to the origin, not the earliest in
+// the route sequence. The old logic (earliest index) forced passengers to walk
+// to a distant stop-0 when a much closer stop existed further along the route.
 function buildSrcRouteMap(nearbyStops) {
   const map = new Map()
   for (const { stop, dist } of nearbyStops) {
@@ -243,28 +309,30 @@ function buildSrcRouteMap(nearbyStops) {
       const idx = route.stops.findIndex(s => s.id === stop.id)
       if (idx === -1) continue
       const ex = map.get(routeId)
-      if (!ex || idx < ex.stopIdx) map.set(routeId, { stopIdx: idx, stop, dist })
+      if (!ex || dist < ex.dist) map.set(routeId, { stopIdx: idx, stop, dist })
     }
   }
   return map
 }
 
-function buildDstRouteMaps(nearbyStops) {
-  const latest   = new Map()
-  const earliest = new Map()
+// For alight stop: collect ALL stops near destination per route, sorted by
+// distance from destination. The direction-check loop tries them nearest-first,
+// so passengers alight as close to their destination as possible.
+function buildDstStopMap(nearbyStops) {
+  const map = new Map()
   for (const { stop, dist } of nearbyStops) {
     for (const routeId of getRoutesForStop(stop.id)) {
       const route = getRoute(routeId)
       if (!route) continue
       const idx = route.stops.findIndex(s => s.id === stop.id)
       if (idx === -1) continue
-      const el = latest.get(routeId)
-      if (!el || idx > el.stopIdx) latest.set(routeId, { stopIdx: idx, stop, dist })
-      const ee = earliest.get(routeId)
-      if (!ee || idx < ee.stopIdx) earliest.set(routeId, { stopIdx: idx, stop, dist })
+      if (!map.has(routeId)) map.set(routeId, [])
+      map.get(routeId).push({ stopIdx: idx, stop, dist })
     }
   }
-  return { latest, earliest }
+  // Sort each route's alight candidates nearest-first
+  for (const entries of map.values()) entries.sort((a, b) => a.dist - b.dist)
+  return map
 }
 
 // ── Route assembly ────────────────────────────────────────────────────────────
@@ -294,46 +362,76 @@ function assembleRoute(steps) {
 }
 
 // ── Commuter score ─────────────────────────────────────────────────────────────
-function scoreRoute(route) {
+function scoreRoute(route, journeyDistM = 0) {
   let score = 55
 
   const transitSteps = route.steps.filter(st => st.mode !== 'walk' && st.mode !== 'auto')
   const hasAuto      = route.steps.some(st => st.mode === 'auto')
 
-  // Transfers — the dominant factor for commuters
-  if      (route.transfers === 0) score += 30
-  else if (route.transfers === 1) score -= 20
-  else if (route.transfers === 2) score -= 55
-  else                             score -= 90
+  // Transfers — important but calibrated so a fast 1-transfer beats a 90-min direct.
+  if      (route.transfers === 0) score += 15
+  else if (route.transfers === 1) score -= 8
+  else if (route.transfers === 2) score -= 35
+  else                             score -= 70
 
   // Mode reliability premium (metro/MMTS run on dedicated tracks, no traffic)
   if      (route.primary_mode === 'metro') score += 15
   else if (route.primary_mode === 'mmts')  score += 8
 
-  // Service frequency (lower = better for waiting time comfort)
+  // Service frequency (lower = better for waiting time comfort).
+  // Deliberately not too steep — a trunk corridor route every 15 min should
+  // still beat an obscure route every 5 min on the same journey.
   const bestFreq = transitSteps.reduce(
     (best, st) => (st.freq_mins > 0 && st.freq_mins < best ? st.freq_mins : best), 999,
   )
-  if      (bestFreq <= 5)  score += 12
-  else if (bestFreq <= 10) score += 8
-  else if (bestFreq <= 20) score += 5
+  if      (bestFreq <= 5)  score += 8
+  else if (bestFreq <= 10) score += 6
+  else if (bestFreq <= 20) score += 4
   else if (bestFreq <= 30) score += 2
 
-  // Walking distance penalty
+  // Walking distance — finer granularity so stop-proximity matters.
+  // A stop 5m away (direct service) should outrank one 150m away even if
+  // frequency is marginally better. Bonus at ≤50m rewards routes whose
+  // stops are right at the boarding/alighting point.
   const walk = route.walking_distance_m
-  if      (walk > 2000) score -= 22
-  else if (walk > 1500) score -= 15
-  else if (walk > 1000) score -= 10
-  else if (walk > 700)  score -= 5
-  else if (walk > 400)  score -= 2
+  if      (walk <= 50)   score += 4
+  else if (walk <= 200)  score -= 0
+  else if (walk <= 400)  score -= 2
+  else if (walk <= 700)  score -= 4
+  else if (walk <= 1000) score -= 7
+  else if (walk <= 1500) score -= 10
+  else if (walk <= 2000) score -= 15
+  else                   score -= 22
 
   // Auto-rickshaw penalty: uncertain pricing, negotiation required, less comfortable
   if (hasAuto) score -= 8
 
-  // Duration penalty for very long journeys (relative to direct alternatives)
+  // Duration: bonus for short journeys, graduated penalty for long ones.
+  // A fast 1-transfer should beat a very slow direct route.
   const mins = route.total_duration_sec / 60
-  if      (mins > 90) score -= 8
-  else if (mins > 60) score -= 3
+  if      (mins <= 20) score += 15
+  else if (mins <= 35) score += 8
+  else if (mins <= 75) score += 0
+  else if (mins <= 90) score -= 8
+  else                  score -= 15
+
+  // Trunk corridor bonus: commonly used Hyderabad commuter routes (219, 216,
+  // 300, 8A, 222A, etc.) and their lettered variants (216K/L, 219S/502…)
+  // are familiar, reliable services that commuters actively seek out.
+  const isTrunk = route.steps
+    .filter(st => st.mode !== 'walk' && st.mode !== 'auto')
+    .some(st => isTrunkLineName(st.line_name))
+  if (isTrunk) score += 6
+
+  // Hub passage bonus: routes through major hubs are more practically useful.
+  score += computeHubPassageBonus(route)
+
+  // Long-journey multi-modal boost: >10 km strongly prefer metro/MMTS.
+  // Buses on 10+ km journeys are usually much slower due to stops and traffic.
+  if (journeyDistM > LONG_JOURNEY_M) {
+    if      (route.primary_mode === 'metro') score += 10
+    else if (route.primary_mode === 'mmts')  score += 6
+  }
 
   return Math.max(0, Math.min(100, score))
 }
@@ -362,129 +460,138 @@ function fingerprint(route) {
 const EMPTY_MODE = Object.freeze({ direct: [], fastest: [], cheapest: [], all: [] })
 
 function findModeRoutes(mode, srcLat, srcLon, srcName, dstLat, dstLon, dstName, fares) {
-  const nearbyR   = NEARBY_RADIUS[mode]
-  const xferR     = TRANSFER_RADIUS[mode]
-  const srcNearby = getNearbyStops(srcLat, srcLon, nearbyR, mode)
-  const dstNearby = getNearbyStops(dstLat, dstLon, nearbyR, mode)
+  const nearbyR      = NEARBY_RADIUS[mode]
+  const xferR        = TRANSFER_RADIUS[mode]
+  const journeyDistM = haversine(srcLat, srcLon, dstLat, dstLon)
+  const srcNearby    = getNearbyStops(srcLat, srcLon, nearbyR, mode)
+  const dstNearby    = getNearbyStops(dstLat, dstLon, nearbyR, mode)
 
   if (!srcNearby.length || !dstNearby.length) return { ...EMPTY_MODE }
 
-  const srcRouteMap          = buildSrcRouteMap(srcNearby)
-  const { latest: dstFwd,
-          earliest: dstRev } = buildDstRouteMaps(dstNearby)
+  const srcRouteMap = buildSrcRouteMap(srcNearby)
+  const dstStopMap  = buildDstStopMap(dstNearby)
+
+  // Phase 4 — Corridor Intelligence: explore trunk corridors first, then by
+  // frequency ascending (more frequent routes generate better options sooner,
+  // which matters because the transfer loop caps at 20 collected routes).
+  const srcRouteEntries = [...srcRouteMap.entries()].sort(([aId], [bId]) => {
+    const aTrunk = isTrunkRoute(aId) ? 0 : 1
+    const bTrunk = isTrunkRoute(bId) ? 0 : 1
+    if (aTrunk !== bTrunk) return aTrunk - bTrunk
+    const aFreq = getRoute(aId)?.frequency_mins || 999
+    const bFreq = getRoute(bId)?.frequency_mins || 999
+    return aFreq - bFreq
+  })
 
   const collected = []
   const seenFPs   = new Set()
 
   function collect(steps) {
+    if (!steps.length) return
     const ro = assembleRoute(steps)
     const fp = fingerprint(ro)
     if (!seenFPs.has(fp)) { seenFPs.add(fp); collected.push(ro) }
   }
 
   // ── Direct routes ─────────────────────────────────────────────────────────
-  for (const [routeId, boardEntry] of srcRouteMap) {
+  // For each boardable route from origin, try destination stops nearest-first.
+  // resolveDirection handles both forward and reverse travel on bidirectional routes.
+  for (const [routeId, boardEntry] of srcRouteEntries) {
     const route = getRoute(routeId)
     if (!route) continue
 
-    const alightFwd = dstFwd.get(routeId)
-    if (alightFwd && boardEntry.stopIdx < alightFwd.stopIdx) {
-      collect(buildLegSteps(
-        srcLat, srcLon, srcName, dstLat, dstLon, dstName,
-        boardEntry.stopIdx, alightFwd.stopIdx, route.stops, route, fares,
-      ))
-      continue
-    }
+    const dstEntries = dstStopMap.get(routeId)
+    if (!dstEntries) continue
 
-    if (BIDIRECTIONAL.has(mode)) {
-      const alightRev = dstRev.get(routeId)
-      if (alightRev && boardEntry.stopIdx > alightRev.stopIdx) {
-        const dir = resolveDirection(route, boardEntry.stop.id, alightRev.stop.id, mode)
-        if (dir) {
-          collect(buildLegSteps(
-            srcLat, srcLon, srcName, dstLat, dstLon, dstName,
-            dir.boardIdx, dir.alightIdx, dir.stops, route, fares,
-          ))
-        }
+    for (const alightEntry of dstEntries) {
+      if (alightEntry.stopIdx === boardEntry.stopIdx) continue
+      const dir = resolveDirection(route, boardEntry.stop.id, alightEntry.stop.id, mode)
+      if (dir) {
+        collect(buildLegSteps(
+          srcLat, srcLon, srcName, dstLat, dstLon, dstName,
+          dir.boardIdx, dir.alightIdx, dir.stops, route, fares,
+        ))
+        break   // nearest valid alight stop found — stop trying farther ones
       }
     }
   }
 
-  // ── One-transfer routes: only when no direct route was found ──────────────
-  if (collected.length === 0) {
-    outerLoop:
-    for (const [routeId1, boardEntry1] of srcRouteMap) {
-      const route1 = getRoute(routeId1)
-      if (!route1) continue
+  // ── One-transfer routes ───────────────────────────────────────────────────
+  // Always attempted: a poor direct route should not suppress a better
+  // 1-transfer option. Scoring ranks them together afterward.
+  outerLoop:
+  for (const [routeId1, boardEntry1] of srcRouteEntries) {
+    const route1 = getRoute(routeId1)
+    if (!route1) continue
 
-      const downstream = route1.stops.slice(boardEntry1.stopIdx + 1)
+    // Choose the direction on route1 with the most downstream stops.
+    // Critical for terminus stops (e.g., Raidurg on Blue Line): forward gives
+    // 0 downstream stops, but reverse gives 22 — without this fix, no transfers
+    // are ever found from a bidirectional terminus.
+    let r1Stops    = route1.stops
+    let r1BoardIdx = boardEntry1.stopIdx
 
-      for (let di = 0; di < downstream.length; di++) {
-        const xferStop = downstream[di]
-        const xferIdx  = boardEntry1.stopIdx + 1 + di
+    if (BIDIRECTIONAL.has(mode)) {
+      const fwdCount = route1.stops.length - boardEntry1.stopIdx - 1
+      const rev = [...route1.stops].reverse()
+      const revBoardIdx = rev.findIndex(s => s.id === boardEntry1.stop.id)
+      const revCount = revBoardIdx !== -1 ? rev.length - revBoardIdx - 1 : 0
+      if (revCount > fwdCount) {
+        r1Stops    = rev
+        r1BoardIdx = revBoardIdx
+      }
+    }
 
-        const candidates = [xferStop]
-        for (const { stop: nb } of getNearbyStops(xferStop.lat, xferStop.lon, xferR, mode)) {
-          if (nb.id !== xferStop.id) candidates.push(nb)
-        }
+    const downstream = r1Stops.slice(r1BoardIdx + 1)
 
-        for (const xStop of candidates) {
-          for (const routeId2 of getRoutesForStop(xStop.id)) {
-            if (routeId2 === routeId1) continue
-            const route2 = getRoute(routeId2)
-            if (!route2 || route2.mode !== mode) continue
+    for (let di = 0; di < downstream.length; di++) {
+      const xferStop = downstream[di]
+      const xferIdx  = r1BoardIdx + 1 + di
 
-            const af2 = dstFwd.get(routeId2)
-            if (af2) {
-              const dir2 = resolveDirection(route2, xStop.id, af2.stop.id, mode)
-              if (dir2) {
-                const stepsL1 = buildLegSteps(
-                  srcLat, srcLon, srcName,
-                  xferStop.lat, xferStop.lon, xferStop.name,
-                  boardEntry1.stopIdx, xferIdx, route1.stops, route1, fares,
-                )
-                const xd = haversine(xferStop.lat, xferStop.lon, xStop.lat, xStop.lon)
-                const xferSteps = xd >= 20
-                  ? [makeWalkStep(xferStop.lat, xferStop.lon, xferStop.name, xStop.lat, xStop.lon, xStop.name)]
-                  : []
-                const stepsL2 = buildLegSteps(
-                  xStop.lat, xStop.lon, xStop.name,
-                  dstLat, dstLon, dstName,
-                  dir2.boardIdx, dir2.alightIdx, dir2.stops, route2, fares,
-                )
-                collect([...stepsL1, ...xferSteps, ...stepsL2])
-                if (collected.length >= 20) break outerLoop
-              }
-            }
+      // Phase 6 — Hub-First Transfer Generation: collect candidate transfer
+      // stops and sort them hub-score-descending so we try major interchange
+      // points (MGBS, Ameerpet, Kachiguda, …) before roadside stops.
+      const nearbyXfer = getNearbyStops(xferStop.lat, xferStop.lon, xferR, mode)
+        .map(x => x.stop)
+        .filter(s => s.id !== xferStop.id)
+      const candidates = [xferStop, ...nearbyXfer]
+        .sort((a, b) => getNearestHubScore(b.lat, b.lon, 500) - getNearestHubScore(a.lat, a.lon, 500))
 
-            if (BIDIRECTIONAL.has(mode)) {
-              const ar2 = dstRev.get(routeId2)
-              if (ar2) {
-                const dir2 = resolveDirection(route2, xStop.id, ar2.stop.id, mode)
-                if (dir2) {
-                  const stepsL1 = buildLegSteps(
-                    srcLat, srcLon, srcName,
-                    xferStop.lat, xferStop.lon, xferStop.name,
-                    boardEntry1.stopIdx, xferIdx, route1.stops, route1, fares,
-                  )
-                  const xd = haversine(xferStop.lat, xferStop.lon, xStop.lat, xStop.lon)
-                  const xferSteps = xd >= 20
-                    ? [makeWalkStep(xferStop.lat, xferStop.lon, xferStop.name, xStop.lat, xStop.lon, xStop.name)]
-                    : []
-                  const stepsL2 = buildLegSteps(
-                    xStop.lat, xStop.lon, xStop.name,
-                    dstLat, dstLon, dstName,
-                    dir2.boardIdx, dir2.alightIdx, dir2.stops, route2, fares,
-                  )
-                  collect([...stepsL1, ...xferSteps, ...stepsL2])
-                  if (collected.length >= 20) break outerLoop
-                }
-              }
+      for (const xStop of candidates) {
+        for (const routeId2 of getRoutesForStop(xStop.id)) {
+          if (routeId2 === routeId1) continue
+          const route2 = getRoute(routeId2)
+          if (!route2 || route2.mode !== mode) continue
+
+          const dstEntries2 = dstStopMap.get(routeId2)
+          if (!dstEntries2) continue
+
+          // Try destination stops nearest-first for the second leg
+          for (const alightEntry2 of dstEntries2) {
+            const dir2 = resolveDirection(route2, xStop.id, alightEntry2.stop.id, mode)
+            if (dir2) {
+              const stepsL1 = buildLegSteps(
+                srcLat, srcLon, srcName,
+                xferStop.lat, xferStop.lon, xferStop.name,
+                r1BoardIdx, xferIdx, r1Stops, route1, fares,
+              )
+              const xd = haversine(xferStop.lat, xferStop.lon, xStop.lat, xStop.lon)
+              const xferSteps = xd >= 20
+                ? [makeWalkStep(xferStop.lat, xferStop.lon, xferStop.name, xStop.lat, xStop.lon, xStop.name)]
+                : []
+              const stepsL2 = buildLegSteps(
+                xStop.lat, xStop.lon, xStop.name,
+                dstLat, dstLon, dstName,
+                dir2.boardIdx, dir2.alightIdx, dir2.stops, route2, fares,
+              )
+              collect([...stepsL1, ...xferSteps, ...stepsL2])
+              if (collected.length >= 20) break outerLoop
+              break   // nearest valid alight for route2 found
             }
           }
         }
-        if (collected.length >= 20) break
       }
+      if (collected.length >= 20) break
     }
   }
 
@@ -492,7 +599,7 @@ function findModeRoutes(mode, srcLat, srcLon, srcName, dstLat, dstLon, dstName, 
 
   // ── Score and sort ────────────────────────────────────────────────────────
   for (const ro of collected) {
-    ro.commuter_score = scoreRoute(ro)
+    ro.commuter_score = scoreRoute(ro, journeyDistM)
     ro.corridor_label = corridorLabel(ro)
   }
 
@@ -502,16 +609,32 @@ function findModeRoutes(mode, srcLat, srcLon, srcName, dstLat, dstLon, dstName, 
     b._corridor_stops - a._corridor_stops
   )
 
+  if (mode === 'bus') {
+    console.log('[TM-DEBUG router.js] collected[] AFTER score+sort:')
+    collected.forEach((r, i) => {
+      const name = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.line_name ?? '?'
+      const freq = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.freq_mins ?? '?'
+      console.log(`  collected[${i}] "${name}" score=${r.commuter_score} freq=${freq} dur=${Math.round(r.total_duration_sec/60)}min xfers=${r.transfers}`)
+    })
+  }
+
   // Tag fastest / cheapest
   if (collected.length) {
     const fi = collected.reduce((mi, r, i) => r.total_duration_sec < collected[mi].total_duration_sec ? i : mi, 0)
     const ci = collected.reduce((mi, r, i) => r.total_cost_inr    < collected[mi].total_cost_inr    ? i : mi, 0)
     collected[fi].tags.push('fastest')
-    if (ci !== fi) collected[ci].tags.push('cheapest')
-    else           collected[ci].tags.push('cheapest')
+    collected[ci].tags.push('cheapest')
   }
 
   const all = collected.slice(0, MAX_ALL[mode])
+
+  if (mode === 'bus') {
+    console.log(`[TM-DEBUG router.js] .all[] after slice(${MAX_ALL[mode]}):`)
+    all.forEach((r, i) => {
+      const name = r.steps?.find(s => s.mode !== 'walk' && s.mode !== 'auto')?.line_name ?? '?'
+      console.log(`  all[${i}] "${name}" score=${r.commuter_score}`)
+    })
+  }
 
   return {
     direct:   all.filter(r => r.transfers === 0),

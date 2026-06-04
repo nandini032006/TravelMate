@@ -1,6 +1,8 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { motion }           from 'framer-motion'
 import L                    from 'leaflet'
+import { MapLayerControl }  from '../MapView/MapLayerControl'
+import { fetchOsrmRoute, sampleWaypoints } from '../../utils/osrm'
 import { getMeta }          from '../../utils/modeColors'
 import { fmtDuration, fmtDist, fmtCost } from '../../utils/formatters'
 import { computeCrowdScore, crowdMeta, fmtETA } from '../../utils/routeComparison'
@@ -14,6 +16,21 @@ import {
 import { analyzeRouteCorridor, corridorTypeMeta, characteristicMeta } from '../../utils/routeAnalysis'
 import { RouteStep } from './RouteStep'
 import './RouteCard.css'
+
+const TILE_URLS = {
+  standard: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    options: { subdomains: 'abcd', maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' },
+  },
+  satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    options: { maxZoom: 18, attribution: 'Tiles &copy; Esri' },
+  },
+  transit: {
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    options: { subdomains: 'abcd', maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' },
+  },
+}
 
 const MODE_ICONS = { bus: '🚌', metro: '🚇', mmts: '🚆', walk: '🚶', auto: '🛺' }
 
@@ -72,69 +89,151 @@ function buildRouteCoords(route) {
   return coords
 }
 
+/* ── Step coords helper ───────────────────────────────────────────────────── */
+
+function stepPts(step) {
+  const pts = []
+  if (step.from_coord?.lat) pts.push([step.from_coord.lat, step.from_coord.lon])
+  if (step.polyline?.length) {
+    for (const p of step.polyline) if (p.lat && p.lon) pts.push([p.lat, p.lon])
+  }
+  if (step.to_coord?.lat) pts.push([step.to_coord.lat, step.to_coord.lon])
+  // deduplicate consecutive identical points
+  return pts.filter((p, i, a) => i === 0 || p[0] !== a[i-1][0] || p[1] !== a[i-1][1])
+}
+
+const STEP_COLORS = { bus: '#f97316', metro: '#3b82f6', mmts: '#d97706', walk: '#94a3b8', auto: '#6366f1' }
+
 /* ── Inline route map ─────────────────────────────────────────────────────── */
 
 function RouteMapView({ route, accentColor }) {
-  const containerRef = useRef(null)
-  const mapRef       = useRef(null)
+  const containerRef  = useRef(null)
+  const mapRef        = useRef(null)
+  const tileRef       = useRef(null)
+  const routeLayerRef = useRef(null)
 
+  const steps = route.steps || []
+
+  const [baseTile,   setBaseTile]   = useState(() => {
+    try { return sessionStorage.getItem('tm_maptile') || 'standard' } catch { return 'standard' }
+  })
+  // null per step = use stop-coord fallback; array = OSRM road geometry
+  const [stepGeoms, setStepGeoms] = useState(() => steps.map(() => null))
+
+  const handleBaseTileChange = useCallback((key) => {
+    setBaseTile(key)
+    try { sessionStorage.setItem('tm_maptile', key) } catch {}
+  }, [])
+
+  // ── Map init ───────────────────────────────────────────────────────────────
   useEffect(() => {
     if (mapRef.current || !containerRef.current) return
-
-    const coords = buildRouteCoords(route)
-    if (coords.length < 2) return
-
     const map = L.map(containerRef.current, {
-      zoomControl:     true,
-      scrollWheelZoom: false,
-      dragging:        true,
-      tap:             false,
+      zoomControl: true, scrollWheelZoom: false, dragging: true, tap: false,
     })
+    mapRef.current = map
+    return () => { map.remove(); mapRef.current = null }
+  }, [])
 
-    /* CartoDB light basemap — clean, labels readable */
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '© OpenStreetMap © CARTO',
-      subdomains:  'abcd',
-      maxZoom:     19,
-    }).addTo(map)
+  // ── Tile swap ──────────────────────────────────────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current; if (!map) return
+    if (tileRef.current) tileRef.current.remove()
+    const cfg = TILE_URLS[baseTile] || TILE_URLS.standard
+    tileRef.current = L.tileLayer(cfg.url, cfg.options).addTo(map)
+  }, [baseTile])
 
-    /* Route polyline */
-    const poly = L.polyline(coords, {
-      color:    accentColor,
-      weight:   4,
-      opacity:  0.85,
-      lineJoin: 'round',
-    }).addTo(map)
+  // ── Draw all steps (runs on mount and whenever OSRM geometry arrives) ──────
+  useEffect(() => {
+    const map = mapRef.current; if (!map) return
+    if (routeLayerRef.current) routeLayerRef.current.remove()
 
-    map.fitBounds(poly.getBounds(), { padding: [28, 28] })
+    const group  = L.layerGroup()
+    const allPts = []
 
-    /* Start / end markers */
-    L.circleMarker(coords[0], {
-      radius: 8, weight: 2.5,
-      color: '#fff', fillColor: '#16a34a', fillOpacity: 1,
-    }).bindTooltip('Start', { permanent: false }).addTo(map)
+    for (const [i, step] of steps.entries()) {
+      const pts = stepGeoms[i] || stepPts(step)
+      if (pts.length < 2) continue
+      allPts.push(...pts)
 
-    L.circleMarker(coords[coords.length - 1], {
-      radius: 8, weight: 2.5,
-      color: '#fff', fillColor: '#dc2626', fillOpacity: 1,
-    }).bindTooltip('End', { permanent: false }).addTo(map)
+      const isWalk  = step.mode === 'walk' || step.mode === 'auto'
+      const color   = STEP_COLORS[step.mode] || accentColor
+      L.polyline(pts, {
+        color,
+        weight:    isWalk ? 2.5 : 4.5,
+        opacity:   isWalk ? 0.65 : 0.9,
+        dashArray: isWalk ? '6 5' : null,
+        lineCap:   'round',
+        lineJoin:  'round',
+      }).addTo(group)
+    }
 
-    /* Stop markers for transit steps */
-    for (const step of route.steps || []) {
+    if (allPts.length >= 2) {
+      L.circleMarker(allPts[0], {
+        radius: 8, weight: 2.5, color: '#fff', fillColor: '#16a34a', fillOpacity: 1,
+      }).bindTooltip('Start').addTo(group)
+      L.circleMarker(allPts[allPts.length - 1], {
+        radius: 8, weight: 2.5, color: '#fff', fillColor: '#dc2626', fillOpacity: 1,
+      }).bindTooltip('End').addTo(group)
+    }
+
+    // Transit stop dots
+    for (const step of steps) {
       if (step.mode === 'walk' || step.mode === 'auto') continue
-      if (step.from_coord?.lat && step.from_coord?.lon) {
+      if (step.from_coord?.lat) {
         L.circleMarker([step.from_coord.lat, step.from_coord.lon], {
           radius: 4, weight: 1.5,
-          color: accentColor, fillColor: '#fff', fillOpacity: 1,
-        }).bindTooltip(step.from_name || '', { sticky: true }).addTo(map)
+          color: STEP_COLORS[step.mode] || accentColor, fillColor: '#fff', fillOpacity: 1,
+        }).bindTooltip(step.from_name || '', { sticky: true }).addTo(group)
       }
     }
 
-    mapRef.current = map
-    return () => { map.remove(); mapRef.current = null }
+    group.addTo(map)
+    routeLayerRef.current = group
+
+    if (allPts.length > 1) {
+      map.fitBounds(L.latLngBounds(allPts), { padding: [28, 28] })
+    }
+  }, [stepGeoms]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Fetch OSRM road geometry for bus/auto steps ────────────────────────────
+  useEffect(() => {
+    if (!steps.length) return
+    let cancelled = false
+
+    Promise.all(
+      steps.map(async (step, i) => {
+        if (step.mode === 'metro' || step.mode === 'mmts' || step.mode === 'walk') return { i, geom: null }
+        const pts = stepPts(step)
+        if (pts.length < 2) return { i, geom: null }
+        const geom = await fetchOsrmRoute(sampleWaypoints(pts, 8))
+        return { i, geom }
+      })
+    ).then(results => {
+      if (cancelled) return
+      if (!results.some(r => r.geom)) return
+      setStepGeoms(prev => {
+        const next = [...prev]
+        for (const { i, geom } of results) if (geom) next[i] = geom
+        return next
+      })
+    })
+
+    return () => { cancelled = true }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return <div ref={containerRef} className="rc__inline-map" />
+  return (
+    <div style={{ position: 'relative' }}>
+      <div ref={containerRef} className="rc__inline-map" />
+      <MapLayerControl
+        layers={{}}
+        onChange={() => {}}
+        baseTile={baseTile}
+        onBaseTileChange={handleBaseTileChange}
+        showOverlays={false}
+      />
+    </div>
+  )
 }
 
 /* ── Live conditions bar ─────────────────────────────────────────────────── */

@@ -125,6 +125,26 @@
 .rp__search-btn:active:not(:disabled) { transform: scale(0.98); }
 .rp__search-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
+.rp__view-map-btn {
+  padding: 9px 16px;
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid rgba(22,163,74,0.35);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+.rp__view-map-btn:hover { background: rgba(22,163,74,0.06); border-color: var(--primary); }
+.rp__view-map-btn--active { color: #64748b; border-color: var(--border); }
+.rp__view-map-btn--active:hover { background: var(--panel-alt); border-color: #94a3b8; }
+
 /* ── Cards list ───────────────────────────────────────────────────────────── */
 .rp__cards {
   flex: 1;
@@ -426,15 +446,18 @@
 .rp__map-wrap {
   flex: 1;
   min-width: 0;
+  min-height: 320px;
   display: flex;
   padding: 8px;
   background: #e2e8f0;
+  position: relative;
 }
 .rp__map {
   flex: 1;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+  min-height: 0;
 }
 
 /* Vehicle + pulse markers used inside Leaflet divIcon HTML */
@@ -1000,40 +1023,7 @@
 .chat-modal__send-btn:hover:not(:disabled) { background: var(--primary-hover); }
 .chat-modal__send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ── Tab bar ──────────────────────────────────────────────────────────────── */
-.tab-bar {
-  display: flex;
-  align-items: center;
-  background: var(--panel-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 16px;
-  flex-shrink: 0;
-  gap: 0;
-  z-index: 30;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-.tab-bar__tab {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 18px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
-  cursor: pointer;
-  border: none;
-  background: none;
-  border-bottom: 2.5px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.15s, border-color 0.15s;
-  letter-spacing: 0.01em;
-}
-.tab-bar__tab:hover { color: var(--text); }
-.tab-bar__tab--active { color: var(--primary); border-bottom-color: var(--primary); }
-.tab-bar__badge {
-  font-size: 8.5px; font-weight: 800; padding: 1px 5px; border-radius: 8px;
-  background: rgba(59,130,246,0.1); color: var(--primary); letter-spacing: 0.02em;
-}
+/* Tab bar styles live in App.css (always-loaded) */
 
 /* ── Analytics placeholder ────────────────────────────────────────────────── */
 .analytics-page {
@@ -1066,7 +1056,7 @@
   .rp { flex-direction: column; }
   .rp__sidebar { width: 100%; max-height: 55vh; }
   .rp__map-wrap { padding: 0; min-height: 40vh; }
-  .tab-bar__tab { padding: 10px 12px; font-size: 11px; }
+  /* tab-bar responsive styles in App.css */
   .chat-modal__panel { height: 80vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   .offer-modal { align-items: flex-end; justify-content: stretch; }
   .offer-modal__panel { width: 100%; height: 90vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; animation: offer-slide-up 0.25s ease-out; }

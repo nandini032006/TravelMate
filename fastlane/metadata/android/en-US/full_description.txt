@@ -1,16 +1,27 @@
-TravelMate Beta is a smart mobility planner for Hyderabad, India. Plan multi-modal routes using Metro, MMTS suburban rail, TSRTC buses, and community ride-pooling — all in one app.
+TravelMate is a multimodal public transit route planner for Hyderabad, India. It combines real GTFS data from official feeds to plan journeys across all three Hyderabad Metro lines, MMTS suburban rail, and over 1,000 TSRTC bus routes — entirely on-device with no backend server required.
 
 Features:
-• Multi-modal route planning: Bus, Metro (all 3 lines), MMTS, auto-rickshaw last mile
-• Real GTFS data — 1,099+ RTC bus routes processed from official feeds
-• Live traffic, weather, and AQI conditions along your route
-• Safety analysis with risk zone alerts
-• Community RidePool with wallet and points system
-• Hyderabad mobility analytics — city-wide transit intelligence heatmap
-• Bilingual: English and Telugu (తెలుగు) with 180+ station name translations
-• Offline route planning — all computation happens on-device, no backend required
-• URL sharing: deep-link journeys with ?from=lat,lon&to=lat,lon
-• Accessibility: screen reader support, keyboard navigation, ARIA landmarks
 
-This is a Public Beta release (v0.9.0-beta). Route coverage and analytics continue to improve.
-Built with privacy in mind — no account required, no personal data collected.
+Multimodal routing: Plan trips combining Hyderabad Metro (Red, Blue, Green lines), MMTS suburban rail, TSRTC city buses, and auto-rickshaw last-mile segments in a single journey.
+
+Real GTFS data: Route data is sourced from official Hyderabad Metro, MMTS, and TSRTC GTFS feeds. Over 1,099 RTC bus routes are included.
+
+Commuter strategies: Choose from six routing strategies — Fastest Arrival, Least Waiting, Metro Preferred, MMTS Preferred, Bus Preferred, and Local Commuter — each applying different priority weights to duration, frequency, cost, transfers, and walking distance.
+
+Live conditions: Ambient traffic, weather, and AQI (Air Quality Index) data is surfaced alongside route options so you can assess real-world travel conditions.
+
+Safety analysis: Routes are analysed against known risk zone data. Risk zone alerts are displayed on the route map and in route cards.
+
+Mobility analytics: A city-wide transit analytics view provides a GIS heatmap of Hyderabad transit coverage and stop density across all modes.
+
+Community RidePool: A community ride-pooling tab lets users browse and offer shared rides, with an integrated points and wallet system.
+
+Bilingual interface: The full app is available in English and Telugu (తెలుగు). Over 180 station and stop names are translated.
+
+Offline-capable: All routing computation runs entirely on-device. No account or login is required. No personal data is collected or transmitted.
+
+Accessibility: ARIA landmarks, screen reader labels, and full keyboard navigation are supported throughout the app.
+
+URL deep-linking: Journeys can be shared and opened via URLs using ?from=lat,lon and ?to=lat,lon query parameters.
+
+This is a public beta release. Route coverage and analytics are under active development.
