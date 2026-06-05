@@ -386,10 +386,11 @@ function toLabel(name) {
 }
 
 function TabBar({ view, setView }) {
+  const { t } = useLang()
   const tabs = [
-    { id: 'transit',   label: 'Transit',   icon: '🚌' },
-    { id: 'ridepool',  label: 'RidePool',  icon: '🚗', badge: 'BETA' },
-    { id: 'analytics', label: 'Analytics', icon: '📊' },
+    { id: 'transit',   label: t.tabTransit,   icon: '🚌' },
+    { id: 'ridepool',  label: t.tabRidePool,  icon: '🚗', badge: 'BETA' },
+    { id: 'analytics', label: t.tabAnalytics, icon: '📊' },
   ]
   return (
     <div className="tab-bar" role="tablist">

@@ -7,7 +7,7 @@ import { getMeta }          from '../../utils/modeColors'
 import { fmtDuration, fmtDist, fmtCost } from '../../utils/formatters'
 import { computeCrowdScore, crowdMeta, fmtETA } from '../../utils/routeComparison'
 import { useLang }          from '../../contexts/LanguageContext'
-import { translateStopName } from '../../translations/stationNames'
+import { translateStopName, translateStopNameBilingual } from '../../translations/stationNames'
 import {
   analyzeRouteSafety,
   safetyScoreMeta,

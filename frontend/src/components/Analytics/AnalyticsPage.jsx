@@ -2,48 +2,49 @@ import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { getAllAreaScores } from '../../utils/areaScoring'
+import { useLang } from '../../contexts/LanguageContext'
 import './AnalyticsPage.css'
 
 const HYD_CENTER = [17.385, 78.4867]
 
 /* ── Label helpers ───────────────────────────────────────────────────────── */
 
-function trafficLabel(s) {
-  if (s >= 70) return 'Light'
-  if (s >= 45) return 'Moderate'
-  return 'Heavy'
+function trafficLabel(s, t) {
+  if (s >= 70) return t.light
+  if (s >= 45) return t.moderate
+  return t.heavy
 }
 
-function crowdLabel(s) {
-  if (s < 35) return 'Very High'
-  if (s < 55) return 'High'
-  if (s < 75) return 'Moderate'
-  return 'Low'
+function crowdLabel(s, t) {
+  if (s < 35) return t.veryHigh
+  if (s < 55) return t.high
+  if (s < 75) return t.moderate
+  return t.low
 }
 
-function delayLabel(s) {
-  if (s < 35) return 'High'
-  if (s < 55) return 'Moderate'
-  return 'Low'
+function delayLabel(s, t) {
+  if (s < 35) return t.high
+  if (s < 55) return t.moderate
+  return t.low
 }
 
-function ridePoolLabel(s) {
-  if (s > 60) return 'Available'
-  if (s > 35) return 'Limited'
-  return 'Minimal'
+function ridePoolLabel(s, t) {
+  if (s > 60) return t.available
+  if (s > 35) return t.limited
+  return t.minimal
 }
 
-function metroActivityLabel(pct) {
-  if (pct > 55) return 'High'
-  if (pct > 30) return 'Moderate'
-  return 'Low'
+function metroActivityLabel(pct, t) {
+  if (pct > 55) return t.high
+  if (pct > 30) return t.moderate
+  return t.low
 }
 
-function mobilityTier(s) {
-  if (s >= 70) return { label: 'Well-served',    cls: 'tier--green' }
-  if (s >= 50) return { label: 'Adequate',       cls: 'tier--amber' }
-  if (s >= 35) return { label: 'Underserved',    cls: 'tier--orange' }
-  return              { label: 'Transit Desert', cls: 'tier--red'   }
+function mobilityTier(s, t) {
+  if (s >= 70) return { label: t.wellServed,    cls: 'tier--green' }
+  if (s >= 50) return { label: t.adequate,       cls: 'tier--amber' }
+  if (s >= 35) return { label: t.underserved,    cls: 'tier--orange' }
+  return              { label: t.transitDesert, cls: 'tier--red'   }
 }
 
 /* ── Professional GIS color scale ───────────────────────────────────────── */
@@ -189,7 +190,7 @@ function ExploreMap({ area, onDotClick }) {
 
 /* ── City Intelligence Map (full GIS heatmap) ───────────────────────────── */
 
-function CityMap({ areas, selectedArea, onAreaSelect }) {
+function CityMap({ areas, selectedArea, onAreaSelect, t }) {
   const containerRef = useRef(null)
   const mapRef       = useRef(null)
   const heatRef      = useRef(null)
@@ -239,14 +240,14 @@ function CityMap({ areas, selectedArea, onAreaSelect }) {
       try {
         const dot = L.circleMarker([area.lat, area.lon], { radius: 9, color, weight: 1, opacity: 0, fillColor: color, fillOpacity: 0, interactive: true })
         dot.bindTooltip(
-          `<div class="aa__tip-name">${area.name}</div><div class="aa__tip-score" style="color:${color}">${s}<span>/100</span></div><div class="aa__tip-type">${mobilityTier(s).label}</div>`,
+          `<div class="aa__tip-name">${area.name}</div><div class="aa__tip-score" style="color:${color}">${s}<span>/100</span></div><div class="aa__tip-type">${mobilityTier(s, t).label}</div>`,
           { sticky: true, className: 'aa__tooltip' }
         )
         dot.on('click', () => onAreaSelect?.(area))
         dot.addTo(map); dotsRef.current[area.id] = dot
       } catch {}
     }
-  }, [areas, onAreaSelect])
+  }, [areas, onAreaSelect, t]) // eslint-disable-line
 
   useEffect(() => {
     const map = mapRef.current
@@ -276,6 +277,7 @@ export function AnalyticsPage() {
   const [showDrop, setShowDrop]         = useState(false)
   const [selectedArea, setSelectedArea] = useState(null)
   const [liveTime, setLiveTime]         = useState(() => new Date())
+  const { t } = useLang()
 
   useEffect(() => {
     const id = setInterval(() => setLiveTime(new Date()), 60000)
@@ -317,42 +319,39 @@ export function AnalyticsPage() {
   return (
     <div className="aa">
 
-      {/* ── Sidebar nav (desktop) / tab bar (mobile) ── */}
       <nav className="aa__nav" aria-label="Analytics navigation">
-        <div className="aa__nav-header">Analytics</div>
+        <div className="aa__nav-header">{t.analyticsNav}</div>
         <button
           className={`aa__nav-item${activeTab === 'live' ? ' aa__nav-item--active' : ''}`}
           onClick={() => setActiveTab('live')}
         >
           <span className="aa__nav-icon" aria-hidden="true">📊</span>
-          <span>Hyderabad Live</span>
+          <span>{t.hyderabadLive}</span>
         </button>
         <button
           className={`aa__nav-item${activeTab === 'area' ? ' aa__nav-item--active' : ''}`}
           onClick={() => setActiveTab('area')}
         >
           <span className="aa__nav-icon" aria-hidden="true">🔍</span>
-          <span>Area Intelligence</span>
+          <span>{t.areaIntelligence}</span>
         </button>
       </nav>
 
-      {/* ── Content ── */}
       <div className="aa__content">
 
-        {/* ── Hyderabad Live ── */}
         {activeTab === 'live' && (
           <div className="aa__live">
 
             <div className="aa__live-header">
               <div>
-                <h2 className="aa__live-title">Hyderabad Live</h2>
+                <h2 className="aa__live-title">{t.hyderabadLive}</h2>
                 <div className="aa__live-sub">
-                  {scoredAreas.length} zones · Transit coverage intelligence · {liveTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                  {scoredAreas.length} {t.zonesTransitIntel} · {liveTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
               <div className="aa__live-badge">
                 <span className="aa__live-pulse" aria-hidden="true" />
-                Live
+                {t.live}
               </div>
             </div>
 
@@ -360,45 +359,45 @@ export function AnalyticsPage() {
               <div className="aa__live-card">
                 <div className="aa__live-card-top">
                   <span className="aa__live-card-icon" aria-hidden="true">🚦</span>
-                  <span className="aa__live-card-label">Traffic</span>
+                  <span className="aa__live-card-label">{t.traffic}</span>
                 </div>
-                <div className="aa__live-card-value">{cityMetrics ? trafficLabel(cityMetrics.avgTraffic) : '—'}</div>
-                <div className="aa__live-card-sub">City average</div>
+                <div className="aa__live-card-value">{cityMetrics ? trafficLabel(cityMetrics.avgTraffic, t) : '—'}</div>
+                <div className="aa__live-card-sub">{t.cityAverage}</div>
               </div>
               <div className="aa__live-card">
                 <div className="aa__live-card-top">
                   <span className="aa__live-card-icon" aria-hidden="true">🚇</span>
-                  <span className="aa__live-card-label">Metro Activity</span>
+                  <span className="aa__live-card-label">{t.metroActivity}</span>
                 </div>
-                <div className="aa__live-card-value">{cityMetrics ? metroActivityLabel(cityMetrics.metroPct) : '—'}</div>
-                <div className="aa__live-card-sub">{cityMetrics ? `${cityMetrics.metroPct}% zones` : ''}</div>
+                <div className="aa__live-card-value">{cityMetrics ? metroActivityLabel(cityMetrics.metroPct, t) : '—'}</div>
+                <div className="aa__live-card-sub">{cityMetrics ? `${cityMetrics.metroPct}% ${t.zones}` : ''}</div>
               </div>
               <div className="aa__live-card">
                 <div className="aa__live-card-top">
                   <span className="aa__live-card-icon" aria-hidden="true">⏰</span>
-                  <span className="aa__live-card-label">Peak Time</span>
+                  <span className="aa__live-card-label">{t.peakTime}</span>
                 </div>
                 <div className="aa__live-card-value">5 – 8 PM</div>
-                <div className="aa__live-card-sub">Evening rush</div>
+                <div className="aa__live-card-sub">{t.eveningRush}</div>
               </div>
               <div className="aa__live-card aa__live-card--alert">
                 <div className="aa__live-card-top">
                   <span className="aa__live-card-icon" aria-hidden="true">⚠️</span>
-                  <span className="aa__live-card-label">Transit Deserts</span>
+                  <span className="aa__live-card-label">{t.transitDeserts}</span>
                 </div>
                 <div className="aa__live-card-value">{cityMetrics ? cityMetrics.deserts : '—'}</div>
-                <div className="aa__live-card-sub">Zones needing coverage</div>
+                <div className="aa__live-card-sub">{t.zonesNeedingCoverage}</div>
               </div>
             </div>
 
             <div className="aa__live-legend">
               <div className="aa__live-legend-bar-row">
-                <span className="aa__ov-legend-label">Desert</span>
+                <span className="aa__ov-legend-label">{t.desert}</span>
                 <div className="aa__ov-legend-gradient" aria-hidden="true" />
-                <span className="aa__ov-legend-label">Strong</span>
+                <span className="aa__ov-legend-label">{t.strong}</span>
               </div>
               <div className="aa__live-legend-row">
-                {[['#15803d','Strong'],['#eab308','Moderate'],['#f97316','Weak'],['#7f1d1d','Desert']].map(([c, l]) => (
+                {[['#15803d',t.strong],['#eab308',t.moderate],['#f97316',t.weak],['#7f1d1d',t.desert]].map(([c, l]) => (
                   <span key={c} className="aa__ov-legend-item">
                     <span className="aa__ov-legend-dot" style={{ background: c }} />
                     {l}
@@ -408,13 +407,12 @@ export function AnalyticsPage() {
             </div>
 
             <div className="aa__live-map">
-              <CityMap areas={scoredAreas} selectedArea={selectedArea} onAreaSelect={handleSelect} />
+              <CityMap areas={scoredAreas} selectedArea={selectedArea} onAreaSelect={handleSelect} t={t} />
             </div>
 
           </div>
         )}
 
-        {/* ── Area Intelligence ── */}
         {activeTab === 'area' && (
           <div className="aa__area">
 
@@ -424,14 +422,14 @@ export function AnalyticsPage() {
                 <input
                   className="aa__search-input"
                   type="text"
-                  placeholder="Search area… e.g. Gachibowli, Hitech City"
+                  placeholder={t.searchArea}
                   value={search}
                   onChange={e => { setSearch(e.target.value); setShowDrop(true) }}
                   onFocus={() => setShowDrop(true)}
                   onBlur={() => setTimeout(() => setShowDrop(false), 160)}
                   onKeyDown={handleSearchKeyDown}
                   autoComplete="off"
-                  aria-label="Search Hyderabad areas"
+                  aria-label={t.searchAreaLabel}
                   aria-autocomplete="list"
                   aria-haspopup="listbox"
                 />
@@ -463,9 +461,9 @@ export function AnalyticsPage() {
             {!selectedArea ? (
               <div className="aa__area-empty">
                 <span className="aa__area-empty-icon" aria-hidden="true">🗺️</span>
-                <span className="aa__area-empty-text">Search an area to explore</span>
+                <span className="aa__area-empty-text">{t.searchAreaExplore}</span>
                 <span className="aa__area-empty-sub">
-                  {scoredAreas.filter(a => a.scores.mobility < 35).length} transit deserts detected in Hyderabad
+                  {scoredAreas.filter(a => a.scores.mobility < 35).length} {t.transitDesertsDetected}
                 </span>
               </div>
             ) : (
@@ -482,16 +480,16 @@ export function AnalyticsPage() {
                       <span className="aa__area-score-denom">/100</span>
                     </div>
                     <div className="aa__area-tier" style={{ color: dotColor(selectedArea.scores.mobility) }}>
-                      {mobilityTier(selectedArea.scores.mobility).label}
+                      {mobilityTier(selectedArea.scores.mobility, t).label}
                     </div>
                   </div>
                   <div className="aa__area-overview-info">
                     <div className="aa__area-overview-name">{selectedArea.name}</div>
                     <div className="aa__area-overview-metrics">
-                      <div className="aa__area-metric"><span aria-hidden="true">👥</span><span>Crowd</span><strong>{crowdLabel(selectedArea.scores.traffic)}</strong></div>
-                      <div className="aa__area-metric"><span aria-hidden="true">⏱</span><span>Delay Risk</span><strong>{delayLabel(selectedArea.scores.traffic)}</strong></div>
-                      <div className="aa__area-metric"><span aria-hidden="true">🚗</span><span>RidePool</span><strong>{ridePoolLabel(selectedArea.scores.mobility)}</strong></div>
-                      <div className="aa__area-metric"><span aria-hidden="true">🚇</span><span>Metro</span><strong>{selectedArea.scores.metro}/100</strong></div>
+                      <div className="aa__area-metric"><span aria-hidden="true">👥</span><span>{t.crowd}</span><strong>{crowdLabel(selectedArea.scores.traffic, t)}</strong></div>
+                      <div className="aa__area-metric"><span aria-hidden="true">⏱</span><span>{t.delayRisk}</span><strong>{delayLabel(selectedArea.scores.traffic, t)}</strong></div>
+                      <div className="aa__area-metric"><span aria-hidden="true">🚗</span><span>{t.ridePool}</span><strong>{ridePoolLabel(selectedArea.scores.mobility, t)}</strong></div>
+                      <div className="aa__area-metric"><span aria-hidden="true">🚇</span><span>{t.metro}</span><strong>{selectedArea.scores.metro}/100</strong></div>
                     </div>
                   </div>
                 </div>
@@ -502,10 +500,10 @@ export function AnalyticsPage() {
 
                 <div className="aa__area-insight-grid">
                   {[
-                    { icon: '🚇', cls: 'aa__insight-icon--green', label: 'Transit Access', value: `${selectedArea.scores.mobility}/100` },
-                    { icon: '👥', cls: 'aa__insight-icon--amber', label: 'Crowd Level',    value: crowdLabel(selectedArea.scores.traffic) },
-                    { icon: '⏱', cls: 'aa__insight-icon--red',   label: 'Delay Risk',     value: delayLabel(selectedArea.scores.traffic) },
-                    { icon: '🚗', cls: 'aa__insight-icon--blue',  label: 'RidePool',       value: ridePoolLabel(selectedArea.scores.mobility) },
+                    { icon: '🚇', cls: 'aa__insight-icon--green', label: t.transitAccess, value: `${selectedArea.scores.mobility}/100` },
+                    { icon: '👥', cls: 'aa__insight-icon--amber', label: t.crowdLevel,    value: crowdLabel(selectedArea.scores.traffic, t) },
+                    { icon: '⏱', cls: 'aa__insight-icon--red',   label: t.delayRisk,     value: delayLabel(selectedArea.scores.traffic, t) },
+                    { icon: '🚗', cls: 'aa__insight-icon--blue',  label: t.ridePool,       value: ridePoolLabel(selectedArea.scores.mobility, t) },
                   ].map(({ icon, cls, label, value }) => (
                     <div key={label} className="aa__insight">
                       <div className={`aa__insight-icon ${cls}`} aria-hidden="true">{icon}</div>

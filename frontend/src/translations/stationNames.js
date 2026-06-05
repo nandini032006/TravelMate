@@ -200,6 +200,13 @@ function _clean(name) {
   return s
 }
 
+export function translateStopNameBilingual(name) {
+  if (!name) return name
+  const te = translateStopName(name)
+  if (te === name || te === _clean(name.trim())) return name
+  return `${name} / ${te}`
+}
+
 export function translateStopName(name) {
   if (!name) return name
   const trimmed = name.trim()

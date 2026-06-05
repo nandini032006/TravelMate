@@ -4,6 +4,7 @@ import { overlapMeta, comfortMeta } from '../../utils/poolScoring'
 import { verificationMeta } from '../../data/mockRiders'
 import { RideChatModal } from './RideChatModal'
 import { spendPoints } from '../../utils/wallet'
+import { useLang } from '../../contexts/LanguageContext'
 
 function getSaved()      { try { return JSON.parse(localStorage.getItem('travelmate_saved_rides') || '[]') } catch { return [] } }
 function toggleSaved(id) {
@@ -28,6 +29,7 @@ export function RidePoolCard({ match, selected, index = 0, onSelect, onJoin }) {
   const [requested, setRequested] = useState(false)
   const [saved,     setSaved]     = useState(() => getSaved().includes(match.id))
   const [joinErr,   setJoinErr]   = useState(null)
+  const { t, lang } = useLang()
 
   const oMeta    = overlapMeta(match.overlapPct)
   const cMeta    = comfortMeta(match.comfortScore)
@@ -35,9 +37,9 @@ export function RidePoolCard({ match, selected, index = 0, onSelect, onJoin }) {
   const d        = match.driver
   const seatsLeft = match.maxOccupancy - match.occupancy
   const vehIcon  = d.vehicle.type === 'bike' ? '🏍' : '🚗'
-  const pts      = match.pointsEarned   // points cost = points earned value (1 pt = 1 ₹)
-  const ptsLabel = `${pts} pts`
-  const fuelShare = `≈ ₹${match.poolFare} fuel share`
+  const pts      = match.pointsEarned
+  const ptsLabel = `${pts} ${t.pts}`
+  const fuelShareLabel = `≈ ₹${match.poolFare} ${t.fuelShare}`
 
   function handleJoin(e) {
     e.stopPropagation()
@@ -61,13 +63,11 @@ export function RidePoolCard({ match, selected, index = 0, onSelect, onJoin }) {
         transition={{ duration: 0.18, delay: index * 0.04 }}
         layout
       >
-        {/* Avatar + verify dot */}
         <div className="rpc__av-col">
           <div className="rpc__av" style={{ background: d.avatarColor }}>{d.initials}</div>
           <div className="rpc__vdot" style={{ background: vMeta.color }} title={vMeta.label} />
         </div>
 
-        {/* Main info */}
         <div className="rpc__info">
           <div className="rpc__row1">
             <span className="rpc__dname">
@@ -98,46 +98,44 @@ export function RidePoolCard({ match, selected, index = 0, onSelect, onJoin }) {
               {Array.from({ length: match.maxOccupancy }, (_, i) => (
                 <span key={i} className={`rpc__sdot${i < match.occupancy ? ' rpc__sdot--taken' : ''}`} />
               ))}
-              <span className="rpc__seats-left">{seatsLeft} left</span>
+              <span className="rpc__seats-left">{seatsLeft} {t.left}</span>
             </div>
           </div>
         </div>
 
-        {/* Right: match % + points cost + actions */}
         <div className="rpc__right-col">
           <div className="rpc__match" style={{ color: oMeta.color }}>
             <span className="rpc__match-num">{match.overlapPct}%</span>
-            <span className="rpc__match-lbl">match</span>
+            <span className="rpc__match-lbl">{t.match}</span>
           </div>
           <div className="rpc__price-blk">
             <span className="rpc__price">{ptsLabel}</span>
-            <span className="rpc__price-save">{fuelShare}</span>
+            <span className="rpc__price-save">{fuelShareLabel}</span>
           </div>
           <div className="rpc__btns">
             {joinErr ? (
               <span className="rpc__join-err">{joinErr}</span>
             ) : requested ? (
-              <span className="rpc__joined">✓ Reserved</span>
+              <span className="rpc__joined">{t.reserved}</span>
             ) : (
               <button className="rpc__btn-join" onClick={handleJoin}>
-                Reserve
+                {t.reserve}
               </button>
             )}
-            <button className="rpc__btn-ico" title="Chat" onClick={e => { e.stopPropagation(); setChat(true) }}>💬</button>
+            <button className="rpc__btn-ico" title={lang === 'te' ? 'చాట్' : 'Chat'} onClick={e => { e.stopPropagation(); setChat(true) }}>💬</button>
             <button
               className={`rpc__btn-ico${saved ? ' rpc__btn-ico--saved' : ''}`}
-              title={saved ? 'Saved' : 'Save'}
+              title={saved ? t.saved : t.save}
               onClick={e => { e.stopPropagation(); setSaved(toggleSaved(match.id)) }}
             >🔖</button>
           </div>
         </div>
 
-        {/* Selected expansion strip */}
         {selected && (
           <div className="rpc__sel-strip">
-            <span className="rpc__pts">🏅 +{match.pointsEarned} pts · {match.pointsPerKm} pts/km</span>
+            <span className="rpc__pts">🏅 +{match.pointsEarned} {t.pts} · {match.pointsPerKm} {t.ptsKm}</span>
             {match.co2SavedKg > 0 && <span className="rpc__eco">🌿 {match.co2SavedKg}kg CO₂</span>}
-            {match.surgeMultiplier > 1 && <span className="rpc__surge-sm">{match.surgeMultiplier}× surge</span>}
+            {match.surgeMultiplier > 1 && <span className="rpc__surge-sm">{match.surgeMultiplier}× {t.surge}</span>}
             <span className="rpc__vnum">{d.vehicle.number}</span>
           </div>
         )}

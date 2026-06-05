@@ -8,7 +8,7 @@ const HYD_LAT = 17.385
 const HYD_LON = 78.4867
 
 export function Navbar() {
-  const { lang, toggleLang } = useLang()
+  const { lang, toggleLang, t } = useLang()
   const [weather, setWeather] = useState(null)
   const [time, setTime]       = useState(new Date())
   const [wallet, setWallet]   = useState(() => getWallet())
@@ -55,7 +55,7 @@ export function Navbar() {
         {isPeak && (
           <div className="navbar__chip navbar__chip--peak">
             <span className="navbar__chip-dot navbar__chip-dot--pulse" />
-            Peak hours
+            {t.peakHours}
           </div>
         )}
         {weather && (
@@ -78,13 +78,13 @@ export function Navbar() {
         <div className="navbar__wallet" title="Community points wallet — 1 pt = ₹1 fuel share">
           <span className="navbar__wallet-icon" aria-hidden="true">🏅</span>
           <span className="navbar__wallet-bal">{wallet.balance}</span>
-          <span className="navbar__wallet-unit">pts</span>
+          <span className="navbar__wallet-unit">{t.pts}</span>
         </div>
 
         <button
           className="navbar__lang"
           onClick={toggleLang}
-          aria-label={lang === 'en' ? 'Switch to Telugu' : 'Switch to English'}
+          aria-label={lang === 'en' ? 'Switch to Telugu' : lang === 'te' ? 'Switch to Both' : 'Switch to English'}
           title="Toggle language / భాష మార్చు"
         >
           <span aria-hidden="true">🌐</span>
